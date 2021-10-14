@@ -21,4 +21,8 @@ public class People : MonoBehaviour
         IsSaved = false;
         Human = human;
     }
+
+    public void HumanDied() {
+        Destroy(Human, TimeToFind);  
+    }
 }
