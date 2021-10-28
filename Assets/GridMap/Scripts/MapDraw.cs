@@ -32,7 +32,7 @@ public class MapDraw : MonoBehaviour
 
     private void generateTexture(int x, int y)
     {
-        mapText = new Texture2D((int)(x * scale), (int)(y * scale));
+        mapText = new Texture2D((int)(x), (int)(y));
 
         Color[] pixels = mapText.GetPixels(0);//mipmap level 0, will generate rest later
 
