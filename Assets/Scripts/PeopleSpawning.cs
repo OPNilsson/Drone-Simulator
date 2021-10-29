@@ -12,7 +12,7 @@ public class PeopleSpawning : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SpawnPeople(100,100);
+        SpawnPeople(420,200);
     }
 
     public void SpawnPeople(int width, int height) {

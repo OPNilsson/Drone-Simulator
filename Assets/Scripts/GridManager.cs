@@ -30,9 +30,10 @@ public class GridManager : MonoBehaviour
 	private void MakeTile(int x, int y, int value)
 	{
 		GameObject g = new GameObject();
-		g.transform.position = new Vector3(x, y);
+		g.transform.position = new Vector3(x, y, 100);
 		var spriteRenderer = g.AddComponent<SpriteRenderer>();
 		spriteRenderer.color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
+		//spriteRenderer.color = new Color(1.0f, 1.0f, 1.0f);
 		spriteRenderer.sprite = sprite;
 	}
 }
