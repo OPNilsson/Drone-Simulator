@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using DTU.Utils;
 
 public class Grid {
@@ -29,15 +26,15 @@ public class Grid {
 
                 for (int y = 0; y < grid.GetLength(1); y++) {
 
-                    debugText[x,y] = Utils.CreateWorldText(grid[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 20, Color.white, TextAnchor.MiddleCenter); // Draws the number inside the cell
+                    //debugText[x,y] = Utils.CreateWorldText(grid[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 20, Color.white, TextAnchor.MiddleCenter); // Draws the number inside the cell
 
-                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f); // Draws Left of the cell
-                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f); // Draws Bottom of the cell
+                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f); // Draws Left of the cell
+                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f); // Draws Bottom of the cell
                 }
             }
 
-        Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f); // Draws Top of the grid
-        Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f); // Draws Right of the grid
+        //Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f); // Draws Top of the grid
+        //Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f); // Draws Right of the grid
 
 
         // Example setting of a cell text value.
@@ -71,7 +68,7 @@ public class Grid {
         if(x >= 0 && y >= 0 && x < width && y < height)
         {
             grid[x, y] = value;
-            debugText[x, y].text = grid[x, y].ToString();
+            //debugText[x, y].text = grid[x, y].ToString();
         }
     }
 
@@ -106,4 +103,7 @@ public class Grid {
 
         return GetValue(x, y);
     }
+
+	public int[,] GetGrid => grid;
+
 }
