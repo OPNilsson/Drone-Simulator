@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PeopleSpawning : MonoBehaviour
 {
+
     [Range(1, 200)]
     public int population;
     public List<People> humans = new List<People>();
