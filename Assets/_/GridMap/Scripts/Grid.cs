@@ -4,6 +4,7 @@ using DTU.Utils;
 public class Grid
 {
     private float cellSize;
+    private bool debug;
     private TextMesh[,] debugText;
     private int[,] grid;
     private int height;
@@ -25,12 +26,14 @@ public class Grid
 
     // maybe change in the future to a 2D array of arrays for the 3D effect. Creates a 2D grid at
     // World Position with each cell being of cell size
-    public Grid(int width, int height, float cellSize, Vector3 originPos)
+    public Grid(int width, int height, float cellSize, Vector3 originPos, bool debug)
     {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
         this.originPos = originPos;
+
+        this.debug = debug;
 
         grid = new int[width, height];
     }
@@ -40,24 +43,29 @@ public class Grid
     // Used for debugging where the grid is drawn out. MUST ENABLE GIZMOS IN UNITY TO SEE THE LINES!
     public void DrawGrid()
     {
-        debugText = new TextMesh[width, height];
-
-        for (int x = 0; x < grid.GetLength(0); x++)
+        if (debug)
         {
-            for (int y = 0; y < grid.GetLength(1); y++)
+            debugText = new TextMesh[width, height];
+
+            for (int x = 0; x < grid.GetLength(0); x++)
             {
-                //debugText[x,y] = Utils.CreateWorldText(grid[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 20, Color.white, TextAnchor.MiddleCenter); // Draws the number inside the cell
+                for (int y = 0; y < grid.GetLength(1); y++)
+                {
+                    debugText[x, y] = Utils.CreateGridText(grid[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 20, Color.white, TextAnchor.MiddleCenter); // Draws the number inside the cell
 
-                //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f); // Draws Left of the cell
-                //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f); // Draws Bottom of the cell
+                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f); // Draws Left of the cell
+                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f); // Draws Bottom of the cell
+                }
             }
+
+            Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f); // Draws Top of the grid
+            Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f); // Draws Right of the grid
         }
+    }
 
-        //Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f); // Draws Top of the grid
-        //Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f); // Draws Right of the grid
-
-        // Example setting of a cell text value.
-        SetValue(2, 1, 69);
+    public bool GetDebugMode()
+    {
+        return debug;
     }
 
     public int GetHeight()
@@ -94,13 +102,22 @@ public class Grid
         return width;
     }
 
+    public void SetDebugMode(bool debug)
+    {
+        this.debug = debug;
+    }
+
     // Sets the Value of a cell at x | y
     public void SetValue(int x, int y, int value)
     {
         if (x >= 0 && y >= 0 && x < width && y < height)
         {
             grid[x, y] = value;
-            //debugText[x, y].text = grid[x, y].ToString();
+
+            if (debug)
+            {
+                debugText[x, y].text = grid[x, y].ToString();
+            }
         }
     }
 

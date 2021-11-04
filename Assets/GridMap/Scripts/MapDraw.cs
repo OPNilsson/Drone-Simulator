@@ -16,7 +16,6 @@ public class MapDraw : MonoBehaviour
 
         // Gets rid of all the Grid_Text objects in the world
         var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "Grid_Text");
-
         foreach (var gridText in objects)
         {
             Destroy(gridText);
@@ -27,7 +26,7 @@ public class MapDraw : MonoBehaviour
     {
         DebugClear();
 
-        grid.DrawGrid(); // Enables debug mode on the grid to draw it out on screen
+        grid.DrawGrid();
     }
 
     private void generateTexture(int x, int y)
@@ -37,9 +36,12 @@ public class MapDraw : MonoBehaviour
         Color[] pixels = mapText.GetPixels(0);//mipmap level 0, will generate rest later
 
         // Creates a x y grid with each cell of size scale at the WorldPosition of 0 , 0
-        grid = new Grid(x, y, scale, new Vector3(0, 0));
+        grid = new Grid(x, y, scale, new Vector3(0, 0), false);
 
         // TODO: hide this option by a button
+
+        // Enables debug mode on the grid to draw it out on screen
+        grid.SetDebugMode(true);
         DebugDraw();
 
         for (int i = 0; i < pixels.Length; ++i)
