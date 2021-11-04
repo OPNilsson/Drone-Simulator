@@ -35,26 +35,26 @@ public class Grid
         grid = new int[width, height];
     }
 
+    public int[,] GetGrid => grid;
+
     // Used for debugging where the grid is drawn out. MUST ENABLE GIZMOS IN UNITY TO SEE THE LINES!
     public void DrawGrid()
     {
         debugText = new TextMesh[width, height];
 
+        for (int x = 0; x < grid.GetLength(0); x++)
+        {
+            for (int y = 0; y < grid.GetLength(1); y++)
+            {
+                //debugText[x,y] = Utils.CreateWorldText(grid[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 20, Color.white, TextAnchor.MiddleCenter); // Draws the number inside the cell
 
-            for (int x = 0; x < grid.GetLength(0); x++) {
-
-                for (int y = 0; y < grid.GetLength(1); y++) {
-
-                    //debugText[x,y] = Utils.CreateWorldText(grid[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 20, Color.white, TextAnchor.MiddleCenter); // Draws the number inside the cell
-
-                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f); // Draws Left of the cell
-                    //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f); // Draws Bottom of the cell
-                }
+                //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f); // Draws Left of the cell
+                //Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f); // Draws Bottom of the cell
             }
+        }
 
         //Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f); // Draws Top of the grid
         //Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f); // Draws Right of the grid
-
 
         // Example setting of a cell text value.
         SetValue(2, 1, 69);
@@ -112,31 +112,4 @@ public class Grid
         GetXY(worldPos, out x, out y); // Converts Vector3 worldpos to XY coordinate
         SetValue(x, y, value);
     }
-
-    // Gets the value of the cell at coordinates x | y
-    public int GetValue(int x, int y)
-    {
-        // check if cell exists
-        if (x >= 0 && y >= 0 && x < width && y < height)
-        {
-            return grid[x, y];
-        } else
-        {
-            return -1; // can return anything -1 just made sense to me
-        }
-    }
-
-    // Gets the value of the cell at world position
-    public int GetValue(Vector3 worldPos)
-    {
-        int x, y;
-
-        GetXY(worldPos, out x, out y);
-
-        return GetValue(x, y);
-    }
-
-	public int[,] GetGrid => grid;
-
 }
-
