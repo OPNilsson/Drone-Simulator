@@ -1,26 +1,45 @@
 ﻿using UnityEngine;
 using DTU.Utils;
 
-public class Grid {
-    private int width;
-    private int height;
+public class Grid
+{
     private float cellSize;
-    private Vector3 originPos;
-
-    private int[,] grid; // maybe change in the future to a 2D array of arrays for the 3D effect.
-
     private TextMesh[,] debugText;
+    private int[,] grid;
+    private int height;
+    private Vector3 originPos;
+    private int width;
 
-    // Creates a 2D grid at World Position with each cell being of cell size
-    public Grid(int width, int height, float cellSize, Vector3 originPos) {
+    // Gets WorldPos of given x and y coordinate
+    private Vector3 GetWorldPosition(int x, int y)
+    {
+        return new Vector3(x, y) * cellSize + originPos;
+    }
+
+    // Gets XY grid coordinates of given WorldPos uses out parameters to return two values
+    private void GetXY(Vector3 worldPos, out int x, out int y)
+    {
+        x = Mathf.FloorToInt((worldPos - originPos).x / cellSize);
+        y = Mathf.FloorToInt((worldPos - originPos).y / cellSize);
+    }
+
+    // maybe change in the future to a 2D array of arrays for the 3D effect. Creates a 2D grid at
+    // World Position with each cell being of cell size
+    public Grid(int width, int height, float cellSize, Vector3 originPos)
+    {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
         this.originPos = originPos;
 
         grid = new int[width, height];
+    }
 
+    // Used for debugging where the grid is drawn out. MUST ENABLE GIZMOS IN UNITY TO SEE THE LINES!
+    public void DrawGrid()
+    {
         debugText = new TextMesh[width, height];
+
 
             for (int x = 0; x < grid.GetLength(0); x++) {
 
@@ -41,31 +60,44 @@ public class Grid {
         SetValue(2, 1, 69);
     }
 
-    public int GetWidth() {
-        return width;
-    }
-
-    public int GetHeight() {
+    public int GetHeight()
+    {
         return height;
     }
 
-    // Gets WorldPos of given x and y coordinate
-    private Vector3 GetWorldPosition(int x, int y)
+    // Gets the value of the cell at coordinates x | y
+    public int GetValue(int x, int y)
     {
-        return new Vector3(x, y) * cellSize + originPos;
+        // check if cell exists
+        if (x >= 0 && y >= 0 && x < width && y < height)
+        {
+            return grid[x, y];
+        }
+        else
+        {
+            return -1; // can return anything -1 just made sense to me
+        }
     }
 
-    // Gets XY grid coordinates of given WorldPos uses out parameters to return two values
-    private void GetXY(Vector3 worldPos, out int x, out int y)
+    // Gets the value of the cell at world position
+    public int GetValue(Vector3 worldPos)
     {
-        x = Mathf.FloorToInt((worldPos - originPos).x / cellSize);
-        y = Mathf.FloorToInt((worldPos - originPos).y / cellSize);
+        int x, y;
+
+        GetXY(worldPos, out x, out y);
+
+        return GetValue(x, y);
     }
 
-    // Sets the Value of a cell at x | y 
+    public int GetWidth()
+    {
+        return width;
+    }
+
+    // Sets the Value of a cell at x | y
     public void SetValue(int x, int y, int value)
     {
-        if(x >= 0 && y >= 0 && x < width && y < height)
+        if (x >= 0 && y >= 0 && x < width && y < height)
         {
             grid[x, y] = value;
             //debugText[x, y].text = grid[x, y].ToString();
@@ -107,3 +139,4 @@ public class Grid {
 	public int[,] GetGrid => grid;
 
 }
+
