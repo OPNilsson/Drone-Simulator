@@ -42,9 +42,9 @@ public class PeopleSpawning : MonoBehaviour
     {
         // Gets rid of all the Human Objects in the world
         var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "Human");
-        foreach (var person in objects)
+        foreach (var victim in objects)
         {
-            DestroyImmediate(person, true);
+            DestroyImmediate(victim, true);
         }
     }
 
