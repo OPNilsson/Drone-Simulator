@@ -45,7 +45,12 @@ public class Drone : MonoBehaviour
             }
         }
 
-        if (path == null || target == null)
+        if (target == null)
+        {
+            control.AssignNewTarget(this);
+        }
+
+        if (path == null)
         {
             return;
         }

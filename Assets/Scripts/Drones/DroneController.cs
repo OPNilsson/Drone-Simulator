@@ -45,17 +45,18 @@ public class DroneController : MonoBehaviour
         // Check that there are still areas of intrests
         if (interests.Count > 0)
         {
-            Debug.Log("Number of Intrest for " + gameObject.name + ": " + interests.Count);
-
             foreach (Interest interest in interests)
             {
-                float distance = Vector2.Distance(drone.transform.position, interest.transform.position);
-
-                if (distance < closestDistance)
+                if (interest != null)
                 {
-                    closestDistance = distance;
+                    float distance = Vector2.Distance(drone.transform.position, interest.transform.position);
 
-                    drone.ChangeTarget(interest.transform);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+
+                        drone.ChangeTarget(interest.transform);
+                    }
                 }
             }
         }
@@ -70,8 +71,6 @@ public class DroneController : MonoBehaviour
                 {
                     interests.Add((Interest)iObject.GetComponent(typeof(Interest)));
                 }
-
-                AssignNewTarget(drone); // recursive call so that it assignes closest interest
             }
             else
             {
