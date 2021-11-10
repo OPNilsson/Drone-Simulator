@@ -4,11 +4,33 @@ using UnityEngine;
 
 public class Interest : MonoBehaviour
 {
+    public SpriteRenderer sprite;
     private const float InterestDropRate = 0.05f;
     private const int InterestTimer = 1; // Time in seconds untill the interest falls again
 
     private List<Drone> drones; // The drones currently inside the area
     private float intrestLevel = 1;
+
+    public void AddDroneToArea(Drone drone)
+    {
+        bool repeat = false;
+
+        // Make sure that the drone being added is not already counted
+        foreach (Drone d in drones)
+        {
+            if (drone == d)
+            {
+                repeat = true;
+            }
+        }
+
+        if (!repeat)
+        {
+            drones.Add(drone);
+
+            InvokeRepeating("ReduceInterest", 0f, InterestTimer); // Change update time if slowing down CPU
+        }
+    }
 
     private void ReduceInterest()
     {
@@ -35,35 +57,12 @@ public class Interest : MonoBehaviour
             {
                 DroneController controller = drone.GetDroneController();
 
-                controller.InterestDetroyed(this);
+                controller.InterestDetroyed(this, drone);
             }
 
             CancelInvoke();
 
             Destroy(gameObject);
-        }
-    }
-
-    public SpriteRenderer sprite;
-
-    public void AddDroneToArea(Drone drone)
-    {
-        bool repeat = false;
-
-        // Make sure that the drone being added is not already counted
-        foreach (Drone d in drones)
-        {
-            if (drone == d)
-            {
-                repeat = true;
-            }
-        }
-
-        if (!repeat)
-        {
-            drones.Add(drone);
-
-            InvokeRepeating("ReduceInterest", 0f, InterestTimer); // Change update time if slowing down CPU
         }
     }
 }

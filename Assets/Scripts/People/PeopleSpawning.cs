@@ -73,7 +73,7 @@ public class PeopleSpawning : MonoBehaviour
             tempHumanObj = Instantiate(human, new Vector3((x * tileWidth) + (tileWidth / 2), (y * tileHeight) + (tileHeight / 2), 1), Quaternion.identity);
             tempHumanObj.transform.localScale = new Vector3(tileWidth, tileHeight);
             tempHuman = new People(x, y, 100, tempHumanObj);
-            tempHuman.HumanDied();
+
             humans.Add(tempHuman);
         }
     }

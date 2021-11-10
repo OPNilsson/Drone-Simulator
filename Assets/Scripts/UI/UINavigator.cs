@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class UINavigator : MonoBehaviour
 {
-    public MapDraw mapRenderer;
     public GameObject menuDB;
     public GameObject menuDM;
     public GameObject menuMain;
@@ -37,6 +36,7 @@ public class UINavigator : MonoBehaviour
     public void updateMap()
     {
         float Sx = 0, Sy = 0, TS = 0;
+
         if (
         !(float.TryParse(MSx.text, out Sx)
         && float.TryParse(MSy.text, out Sy)
@@ -45,14 +45,9 @@ public class UINavigator : MonoBehaviour
             Debug.Log("parse error");
             Sx = 1; Sy = 1; TS = 1;
         }
-        /*
-        float Sx =float.Parse(MSx.text);
-        float Sy =float.Parse(MSy.text);
-        float TS =float.Parse(MTS.text);
-        */
 
-        //mapRenderer.setSize((int)(Sx / TS), (int)(Sy / TS), TS);
+        SettingsController settings = new SettingsController();
 
-        mapRenderer.setSize((int)Sx, (int)Sy, TS);
+        settings.SpawnMap((int)Sx, (int)Sy, TS);
     }
 }

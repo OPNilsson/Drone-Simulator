@@ -8,6 +8,7 @@ TagManager:
   - Area of Interest
   - Obstacle
   - Drone Base
+  - Human
   layers:
   - Default
   - TransparentFX
@@ -16,8 +17,8 @@ TagManager:
   - Water
   - UI
   - Obstacle
-  - 
-  - 
+  - Outside Main Cam
+  - Target
   - 
   - 
   - 

@@ -6,112 +6,28 @@ using Pathfinding;
 
 public class Drone : MonoBehaviour
 {
-    private const float UpdateTime = 0.05f;
-    private Rigidbody2D body;
-    private DroneController control;
-    private Path path;
-
-    // reached the end of its path
-    private Seeker seeker;
-
-    private int waypoint_current = 0;
-
-    private bool EnoughFuel()
-    {
-        int wayPointsRemaining = path.vectorPath.Count - waypoint_current;
-
-        if ((fuel - (FuelConsumptionRate * wayPointsRemaining)) > MinFuel)
-        {
-            return true;
-        }
-        else if (wayPointsRemaining <= 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false; // TODO: Calculate the flight back
-        }
-    }
-
-    private void OnPathComplete(Path p)
-    {
-        if (!p.error)
-        {
-            path = p;
-
-            waypoint_current = 1; // path.vectorPath [0] is drone position so you don't want to calculate the path to itself
-        }
-    }
-
-    private void Start()
-    {
-        seeker = GetComponent<Seeker>();
-        body = GetComponent<Rigidbody2D>();
-
-        Refuling = false;
-
-        // Find all Drone Bases
-        GameObject[] bases = GameObject.FindGameObjectsWithTag("Drone Base");
-
-        // Check which one is the closest
-        float closestDistance = 1000;
-        foreach (GameObject droneBase in bases)
-        {
-            float distance = Vector2.Distance(body.position, droneBase.transform.position);
-
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-
-                control = droneBase.GetComponent<DroneController>();
-            }
-        }
-
-        // target is null when not spawned in manually
-        if (target != null)
-        {
-            InvokeRepeating("UpdatePath", 0f, UpdateTime); // Change update time if slowing down CPU
-        }
-    }
-
-    private void UpdatePath()
-    {
-        // Makes sure not to create a new path while already calculating one
-        if (seeker.IsDone())
-        {
-            seeker.StartPath(body.position, target.position, OnPathComplete);
-        }
-    }
-
-    private void UseFuel()
-    {
-        fuel -= FuelConsumptionRate;
-
-        fuelSlider.value = fuel;
-    }
-
+    public MeshRenderer fovRenderer;
     public float fuel = 100f;
     public float fuel_max = 100f;
     public float FuelConsumptionRate = 0.05f;
     public Slider fuelSlider;
     public int MinFuel = 10;
 
-    // The amount of mininimum fuel that the drone can have before returning home
     public float speed_movement = 500f;
-
     public float speed_turn = 100f;
-    public Transform sprite;
-
-    // The sprite of the drone
+    public SpriteRenderer sprite;
     public Transform target;
-
-    // The thing the drone should be moving towards.
-    public float view_distance;
-
     public float waypoint_distance = 20f;
+    private const float UpdateTime = 0.05f;
+    private Rigidbody2D body;
+    private DroneController control;
+    private FOV fov;
+    private Path path;
+    private Seeker seeker;
+
+    private int waypoint_current = 0;
+
     public bool Refuling { get; set; }
-    // The distance it needs to be to the next waypoint in it's path inorder to move on to the next waypoint
 
     public void ChangeTarget(Transform target)
     {
@@ -120,6 +36,15 @@ public class Drone : MonoBehaviour
 
     public void FixedUpdate()
     {
+        // Check if it has spotted a human
+        if (fov.visibleTargets.Count > 0)
+        {
+            foreach (Transform visibleTarget in fov.visibleTargets)
+            {
+                control.HumanFound(visibleTarget);
+            }
+        }
+
         if (path == null || target == null)
         {
             return;
@@ -158,7 +83,7 @@ public class Drone : MonoBehaviour
         {
             Quaternion rotation = Quaternion.LookRotation(Vector3.forward, force);
 
-            sprite.rotation = Quaternion.RotateTowards(sprite.rotation, rotation, speed_turn * Time.deltaTime);
+            gameObject.transform.rotation = Quaternion.RotateTowards(gameObject.transform.rotation, rotation, speed_turn * Time.deltaTime);
         }
 
         float distance = Vector2.Distance(body.position, path.vectorPath[waypoint_current]);
@@ -195,5 +120,105 @@ public class Drone : MonoBehaviour
         fuel = fuelMax; // Maybe don't refuel
 
         fuelSlider.value = fuelMax;
+    }
+
+    public Vector3 VectorDirectionFromDegrees(float angleDegrees)
+    {
+        return new Vector3(
+            Mathf.Sin(angleDegrees * Mathf.Deg2Rad),
+            0,
+            Mathf.Cos(angleDegrees * Mathf.Deg2Rad));
+    }
+
+    private bool EnoughFuel()
+    {
+        int wayPointsRemaining = path.vectorPath.Count - waypoint_current;
+
+        if ((fuel - (FuelConsumptionRate * wayPointsRemaining)) > MinFuel)
+        {
+            return true;
+        }
+        else if (wayPointsRemaining <= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false; // TODO: Calculate the flight back
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Bounds droneBounds = GetComponent<CircleCollider2D>().bounds;
+
+        Vector3 size = droneBounds.size * 5; // Calculates drones sizes around the drone
+
+        droneBounds.size = size;
+
+        var guo = new GraphUpdateObject(droneBounds);
+
+        guo.updatePhysics = true;
+
+        AstarPath.active.UpdateGraphs(guo);
+    }
+
+    private void OnPathComplete(Path p)
+    {
+        if (!p.error)
+        {
+            path = p;
+
+            waypoint_current = 1; // path.vectorPath [0] is drone position so you don't want to calculate the path to itself
+        }
+    }
+
+    private void Start()
+    {
+        seeker = GetComponent<Seeker>();
+        body = GetComponent<Rigidbody2D>();
+
+        fov = GetComponent<FOV>();
+
+        Refuling = false;
+
+        // Find all Drone Bases
+        GameObject[] bases = GameObject.FindGameObjectsWithTag("Drone Base");
+
+        // Check which one is the closest
+        float closestDistance = float.MaxValue;
+        foreach (GameObject droneBase in bases)
+        {
+            float distance = Vector2.Distance(body.position, droneBase.transform.position);
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+
+                control = droneBase.GetComponent<DroneController>(); // Assign it that base
+            }
+        }
+
+        // target is null when not spawned in manually
+        if (target != null)
+        {
+            InvokeRepeating("UpdatePath", 0f, UpdateTime); // Change update time if slowing down CPU
+        }
+    }
+
+    private void UpdatePath()
+    {
+        // Makes sure not to create a new path while already calculating one
+        if (seeker.IsDone() && target != null)
+        {
+            seeker.StartPath(body.position, target.position, OnPathComplete);
+        }
+    }
+
+    private void UseFuel()
+    {
+        fuel -= FuelConsumptionRate;
+
+        fuelSlider.value = fuel;
     }
 }
