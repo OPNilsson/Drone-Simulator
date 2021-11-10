@@ -12,6 +12,7 @@ public class SettingsController : MonoBehaviour
     public static int mapWidth;
     public static int numberOfSurvivors;
     public static int tileHeight, tileWidth;
+	public static int seed;
     public GameObject Map;
     public GameObject PeopleSpawner;
 
@@ -30,6 +31,11 @@ public class SettingsController : MonoBehaviour
         numberOfSurvivors = int.Parse(newNumberOfSurvivors);
     }
 
+	public void saveSeed(string newSeed)
+	{
+		seed = int.Parse(newSeed);
+	}
+
     public void SpawnMap()
     {
         GameObject map = Instantiate(Map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
@@ -39,6 +45,6 @@ public class SettingsController : MonoBehaviour
         // Generates the People
         GameObject peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         peopleSpawner.SendMessage("Exterminate"); // Makes Sure that there are no people already there
-        peopleSpawner.SendMessage("Spawn", new ValueTuple<int, int, int>(numberOfSurvivors, mapWidth, mapHeight));
+        peopleSpawner.SendMessage("Spawn", new ValueTuple<int, int, int, int>(numberOfSurvivors, mapWidth, mapHeight, seed));
     }
 }

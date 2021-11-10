@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -9,9 +10,9 @@ public class PeopleSpawning : MonoBehaviour
     private GameObject UI;
 
     // Start is called before the first frame update
-    private void Spawn(ValueTuple<int, int, int> paramters)
+    private void Spawn(ValueTuple<int, int, int, int> paramters)
     {
-        SpawnPeople(paramters.Item1, paramters.Item2, paramters.Item3);
+        SpawnPeople(paramters.Item1, paramters.Item2, paramters.Item3, paramters.Item4);
     }
 
     public GameObject human;
@@ -48,7 +49,7 @@ public class PeopleSpawning : MonoBehaviour
         }
     }
 
-    public void SpawnPeople(int numberOfPeople, int width, int height)
+    public void SpawnPeople(int numberOfPeople, int width, int height, int seed)
     {
         humans = new List<People>();
 
@@ -63,6 +64,8 @@ public class PeopleSpawning : MonoBehaviour
         float y;
         GameObject tempHumanObj;
         People tempHuman;
+
+		UnityEngine.Random.InitState(seed);
 
         for (int i = 0; i < numberOfPeople; i++)
         {
