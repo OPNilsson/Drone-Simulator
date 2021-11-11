@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class People : MonoBehaviour
+public class People// : MonoBehaviour // this is for scripts atached to unity objects...
 {
     public float XCords { get; set; }
     public float YCords { get; set; }
@@ -23,6 +23,7 @@ public class People : MonoBehaviour
     }
 
     public void HumanDied() {
-        Destroy(Human, TimeToFind);  
+        //Destroy(Human, TimeToFind); 
+        GameObject.Destroy(Human, TimeToFind);//not the best way though, since human could still have an entry in the human list, yet have been destroyed already...
     }
 }

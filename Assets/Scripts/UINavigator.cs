@@ -5,13 +5,19 @@ using UnityEngine.UI;
 
 public class UINavigator : MonoBehaviour
 {
-    public MapDraw mapRenderer;
+    //public GameObject mapRenderer;
     public GameObject menuDB;
     public GameObject menuDM;
     public GameObject menuMain;
     public Text MSx;
     public Text MSy;
     public Text MTS;
+    public Text Seed;
+    public Text SN;
+    public GameObject Map;
+    public GameObject PeopleSpawner;
+    GameObject map = null;
+    GameObject peopleSpawner = null;
 
     public void dB()
     {
@@ -36,14 +42,17 @@ public class UINavigator : MonoBehaviour
 
     public void updateMap()
     {
-        float Sx = 0, Sy = 0, TS = 0;
+        int Sx = 0, Sy = 0, seed=0, survivors=0;
+        float TS = 0;
         if (
-        !(float.TryParse(MSx.text, out Sx)
-        && float.TryParse(MSy.text, out Sy)
-        && float.TryParse(MTS.text, out TS)))
+        !(int.TryParse(MSx.text, out Sx)
+        && int.TryParse(MSy.text, out Sy)
+        && float.TryParse(MTS.text, out TS)
+        && int.TryParse(Seed.text, out seed)
+        && int.TryParse(SN.text, out survivors)))
         {
             Debug.Log("parse error");
-            Sx = 1; Sy = 1; TS = 1;
+            Sx = 1; Sy = 1; TS = 1; seed=0;
         }
         /*
         float Sx =float.Parse(MSx.text);
@@ -53,6 +62,25 @@ public class UINavigator : MonoBehaviour
 
         //mapRenderer.setSize((int)(Sx / TS), (int)(Sy / TS), TS);
 
-        mapRenderer.setSize((int)Sx, (int)Sy, TS);
+        if(map!=null){
+            DestroyImmediate(map, true);
+        }
+        map = Instantiate(Map, new Vector3(0, 0, 0), Map.transform.rotation) as GameObject;
+        map.GetComponent<GridManager>().Spawn(Sx,Sy,TS);
+
+        // Generates the People
+        if(peopleSpawner!=null){
+            DestroyImmediate(peopleSpawner, true);
+        }
+        peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        //peopleSpawner.SendMessage("Exterminate"); // Makes Sure that there are no people already there
+        peopleSpawner.GetComponent<PeopleSpawning>().Spawn(survivors, Sx, Sy, seed,TS);
+
+        //mapRenderer.setSize((int)Sx, (int)Sy, TS);
+    }
+
+    public void SpawnMap()
+    {
+        
     }
 }
