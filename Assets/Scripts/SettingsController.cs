@@ -12,8 +12,11 @@ public class SettingsController : MonoBehaviour
     public static int mapWidth;
     public static int numberOfSurvivors;
     public static int tileHeight, tileWidth;
+	public static int seed;
     public GameObject Map;
     public GameObject PeopleSpawner;
+    GameObject map = null;
+    GameObject peopleSpawner = null;
 
     public void saveMapHeight(string newMapHeight)
     {
@@ -30,15 +33,26 @@ public class SettingsController : MonoBehaviour
         numberOfSurvivors = int.Parse(newNumberOfSurvivors);
     }
 
+	public void saveSeed(string newSeed)
+	{
+		seed = int.Parse(newSeed);
+	}
+
     public void SpawnMap()
     {
-        GameObject map = Instantiate(Map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        if(map!=null){
+            DestroyImmediate(map, true);
+        }
+       map = Instantiate(Map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 
         map.SendMessage("Spawn", new ValueTuple<int, int>(mapWidth, mapHeight));
 
         // Generates the People
-        GameObject peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-        peopleSpawner.SendMessage("Exterminate"); // Makes Sure that there are no people already there
-        peopleSpawner.SendMessage("Spawn", new ValueTuple<int, int, int>(numberOfSurvivors, mapWidth, mapHeight));
+        if(peopleSpawner!=null){
+            DestroyImmediate(peopleSpawner, true);
+        }
+        peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        //peopleSpawner.SendMessage("Exterminate"); // Makes Sure that there are no people already there
+        peopleSpawner.SendMessage("Spawn", new ValueTuple<int, int, int, int>(numberOfSurvivors, mapWidth, mapHeight, seed));
     }
 }

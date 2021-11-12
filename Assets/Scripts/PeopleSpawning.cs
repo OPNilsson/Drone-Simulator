@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -9,9 +10,9 @@ public class PeopleSpawning : MonoBehaviour
     private GameObject UI;
 
     // Start is called before the first frame update
-    private void Spawn(ValueTuple<int, int, int> paramters)
+    public void Spawn(int n, int x, int y, int s, float ts)
     {
-        SpawnPeople(paramters.Item1, paramters.Item2, paramters.Item3);
+        SpawnPeople(n,x,y,s,ts);
     }
 
     public GameObject human;
@@ -41,39 +42,42 @@ public class PeopleSpawning : MonoBehaviour
     public void Exterminate()
     {
         // Gets rid of all the Human Objects in the world
-        var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "Human");
+        var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "Human(Clone)");
         foreach (var person in objects)
         {
             DestroyImmediate(person, true);
         }
     }
 
-    public void SpawnPeople(int numberOfPeople, int width, int height)
+    public void SpawnPeople(int numberOfPeople, int width, int height, int seed, float scale)
     {
         humans = new List<People>();
 
-        UI = GameObject.Find("PanelMain");
-        var test = UI.GetComponent<RectTransform>().rect.width;
-        var size = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - test, Screen.height, 0));
+        //UI = GameObject.Find("PanelMain");
+        //var test = UI.GetComponent<RectTransform>().rect.width;
+        //var size = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - test, Screen.height, 0));
 
-        var tileWidth = size.x / width;
-        var tileHeight = size.y / height;
+        //var tileWidth = size.x / width;
+        //var tileHeight = size.y / height;
 
         float x;
         float y;
         GameObject tempHumanObj;
         People tempHuman;
 
+		UnityEngine.Random.InitState(seed);
+        humans.Clear();
         for (int i = 0; i < numberOfPeople; i++)
         {
             x = UnityEngine.Random.Range(0, width);
             y = UnityEngine.Random.Range(0, height);
 
             // Instantiate Game Object
-            tempHumanObj = Instantiate(human, new Vector3((x * tileWidth) + (tileWidth / 2), (y * tileHeight) + (tileHeight / 2), 1), Quaternion.identity);
-            tempHumanObj.transform.localScale = new Vector3(tileWidth, tileHeight);
+            tempHumanObj = Instantiate(human, new Vector3((x * scale) + (scale / 2), (y * scale) + (scale / 2), -1), Quaternion.identity);
+            tempHumanObj.transform.localScale = new Vector3(scale, scale,1);
+            tempHumanObj.transform.parent=gameObject.transform;
             tempHuman = new People(x, y, 100, tempHumanObj);
-            tempHuman.HumanDied();
+            //tempHuman.HumanDied();//why kill instantly??
             humans.Add(tempHuman);
         }
     }

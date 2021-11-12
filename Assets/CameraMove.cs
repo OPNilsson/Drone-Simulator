@@ -31,6 +31,6 @@ public class CameraMove : MonoBehaviour
         s.x+=Input.GetAxis("Horizontal")*a;
         s.y+=Input.GetAxis("Vertical")*a;
         s*=d;
-        gameObject.transform.position+=s;
+        gameObject.transform.position+=s*zoom;
     }
 }
