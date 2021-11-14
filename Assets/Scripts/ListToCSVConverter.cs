@@ -16,6 +16,7 @@ public class ListToCSVConverter : MonoBehaviour
 
         foreach (People people in humanList) {
             write.WriteLine(people.XCords + "," + people.YCords + "," + people.TimeToFind);
+            writer.Write(System.Environment.NewLine);
         }
         write.Flush();
         write.Close();
