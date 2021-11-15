@@ -10,12 +10,16 @@ public class SettingsController : MonoBehaviour
     public static int number_Drones = 10;
     public static int number_Interests = 3;
     public static int numberOfSurvivors;
+    public static int seed;
     public static int tileHeight, tileWidth;
 
+    public GameObject Map;
     public GameObject PeopleSpawner;
     public GameObject prefab_drone;
     public GameObject prefab_human;
     public GameObject prefab_interest;
+    private GameObject map = null;
+    private GameObject peopleSpawner = null;
     private GameObject UI;
 
     public void ClearMap()
@@ -60,13 +64,6 @@ public class SettingsController : MonoBehaviour
         });
     }
 
-	public static int seed;
-    public GameObject Map;
-    public GameObject PeopleSpawner;
-    GameObject map = null;
-    GameObject peopleSpawner = null;
-
-
     public void saveMapHeight(string newMapHeight)
     {
         mapHeight = int.Parse(newMapHeight);
@@ -82,6 +79,11 @@ public class SettingsController : MonoBehaviour
         numberOfSurvivors = int.Parse(newNumberOfSurvivors);
     }
 
+    public void saveSeed(string newSeed)
+    {
+        seed = int.Parse(newSeed);
+    }
+
     public void SpawnDroneController()
     {
         // TODO: Implement Spawning of Drone Bases from UI
@@ -90,30 +92,27 @@ public class SettingsController : MonoBehaviour
     public void SpawnMap(int width, int height, float tileScale)
     {
         ClearMap();
-
-	public void saveSeed(string newSeed)
-	{
-		seed = int.Parse(newSeed);
-	}
+    }
 
     public void SpawnMap()
     {
-        if(map!=null){
+        if (map != null)
+        {
             DestroyImmediate(map, true);
         }
-       map = Instantiate(Map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        map = Instantiate(Map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 
-
-        map.GetComponent<GridManager>().Spawn(Sx,Sy,TS);
+        // map.GetComponent<GridManager>().Spawn(Sx, Sy, TS);
 
         // Generates the People
-        if(peopleSpawner!=null){
+        if (peopleSpawner != null)
+        {
             DestroyImmediate(peopleSpawner, true);
         }
         peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-        //peopleSpawner.SendMessage("Exterminate"); // Makes Sure that there are no people already there
-        peopleSpawner.GetComponent<PeopleSpawning>().Spawn(survivors, Sx, Sy, seed,TS);
 
+        //peopleSpawner.SendMessage("Exterminate"); // Makes Sure that there are no people already there
+        // peopleSpawner.Spawn(survivors, Sx, Sy, seed, TS);
 
         // Generates the Drones
 
@@ -121,11 +120,11 @@ public class SettingsController : MonoBehaviour
         var graph = (GridGraph)AstarPath.active.data.graphs[0]; // index 0 is the main one that holds all the pathing for the drones
         // Max size of the Pathfinding Grid is 1024 x 1024
         graph.center = new Vector3(0, 0, 0);
-        graph.SetDimensions(width, height, tileScale); // More nodes create a smoother path but use a lot more CPU and MEMORY
+        // graph.SetDimensions(width, height, tileScale); // More nodes create a smoother path but
+        // use a lot more CPU and MEMORY
 
         AstarPath.active.Scan(); // Will take a LONG time might be better to update only the different parts using GraphUpdateObject
     }
-
 
     public void SpawnPeople()
     {
@@ -140,12 +139,12 @@ public class SettingsController : MonoBehaviour
         Physics2D.IgnoreLayerCollision(prefab_drone.layer, prefab_human.layer);
 
         // Generates the People
-        if(peopleSpawner!=null){
+        if (peopleSpawner != null)
+        {
             DestroyImmediate(peopleSpawner, true);
         }
         peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         //peopleSpawner.SendMessage("Exterminate"); // Makes Sure that there are no people already there
         peopleSpawner.SendMessage("Spawn", new ValueTuple<int, int, int, int>(numberOfSurvivors, mapWidth, mapHeight, seed));
-
     }
 }
