@@ -11,6 +11,7 @@ public class SettingsController : MonoBehaviour
     public static int number_Interests = 3;
     public static int numberOfSurvivors;
     public static int tileHeight, tileWidth;
+
     public GameObject PeopleSpawner;
     public GameObject prefab_drone;
     public GameObject prefab_human;
@@ -59,6 +60,13 @@ public class SettingsController : MonoBehaviour
         });
     }
 
+	public static int seed;
+    public GameObject Map;
+    public GameObject PeopleSpawner;
+    GameObject map = null;
+    GameObject peopleSpawner = null;
+
+
     public void saveMapHeight(string newMapHeight)
     {
         mapHeight = int.Parse(newMapHeight);
@@ -83,6 +91,30 @@ public class SettingsController : MonoBehaviour
     {
         ClearMap();
 
+	public void saveSeed(string newSeed)
+	{
+		seed = int.Parse(newSeed);
+	}
+
+    public void SpawnMap()
+    {
+        if(map!=null){
+            DestroyImmediate(map, true);
+        }
+       map = Instantiate(Map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+
+
+        map.GetComponent<GridManager>().Spawn(Sx,Sy,TS);
+
+        // Generates the People
+        if(peopleSpawner!=null){
+            DestroyImmediate(peopleSpawner, true);
+        }
+        peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        //peopleSpawner.SendMessage("Exterminate"); // Makes Sure that there are no people already there
+        peopleSpawner.GetComponent<PeopleSpawning>().Spawn(survivors, Sx, Sy, seed,TS);
+
+
         // Generates the Drones
 
         // Generates the Pathfinding Grid
@@ -93,6 +125,7 @@ public class SettingsController : MonoBehaviour
 
         AstarPath.active.Scan(); // Will take a LONG time might be better to update only the different parts using GraphUpdateObject
     }
+
 
     public void SpawnPeople()
     {
@@ -105,5 +138,14 @@ public class SettingsController : MonoBehaviour
     {
         // Make sure that drones cannot collide with humans
         Physics2D.IgnoreLayerCollision(prefab_drone.layer, prefab_human.layer);
+
+        // Generates the People
+        if(peopleSpawner!=null){
+            DestroyImmediate(peopleSpawner, true);
+        }
+        peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        //peopleSpawner.SendMessage("Exterminate"); // Makes Sure that there are no people already there
+        peopleSpawner.SendMessage("Spawn", new ValueTuple<int, int, int, int>(numberOfSurvivors, mapWidth, mapHeight, seed));
+
     }
 }

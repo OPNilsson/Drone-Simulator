@@ -11,6 +11,12 @@ public class UINavigator : MonoBehaviour
     public Text MSx;
     public Text MSy;
     public Text MTS;
+    public Text Seed;
+    public Text SN;
+    public GameObject Map;
+    public GameObject PeopleSpawner;
+    GameObject map = null;
+    GameObject peopleSpawner = null;
 
     public void dB()
     {
@@ -35,19 +41,29 @@ public class UINavigator : MonoBehaviour
 
     public void updateMap()
     {
-        float Sx = 0, Sy = 0, TS = 0;
+
+        int Sx = 0, Sy = 0, seed=0, survivors=0;
+        float TS = 0;
 
         if (
-        !(float.TryParse(MSx.text, out Sx)
-        && float.TryParse(MSy.text, out Sy)
-        && float.TryParse(MTS.text, out TS)))
+        !(int.TryParse(MSx.text, out Sx)
+        && int.TryParse(MSy.text, out Sy)
+        && float.TryParse(MTS.text, out TS)
+        && int.TryParse(Seed.text, out seed)
+        && int.TryParse(SN.text, out survivors)))
         {
             Debug.Log("parse error");
-            Sx = 1; Sy = 1; TS = 1;
+            Sx = 1; Sy = 1; TS = 1; seed=0;
         }
 
         SettingsController settings = new SettingsController();
 
+
         settings.SpawnMap((int)Sx, (int)Sy, TS);
+
+
+
+        //mapRenderer.setSize((int)Sx, (int)Sy, TS);
     }
+
 }
