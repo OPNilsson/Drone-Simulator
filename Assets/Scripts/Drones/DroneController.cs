@@ -18,6 +18,10 @@ public class DroneController : MonoBehaviour
     public int num_interest = 0;
     public int num_people = 0;
 
+    bool runCSVO = true;
+
+    public ListToCSVConverter toCSVConverter;
+
     public GameObject prefab_drone;
 
     public GameObject prefab_human;
@@ -89,8 +93,12 @@ public class DroneController : MonoBehaviour
         {
             if (transform == person.transform)
             {
+                person.XCords = transform.position.x;
+                person.YCords = transform.position.y;
                 removePerson = true;
                 personToRemove = person;
+                Debug.Log(personToRemove.YCords);
+                Debug.Log(personToRemove.XCords);
 
                 person.Spotted();
 
@@ -106,6 +114,11 @@ public class DroneController : MonoBehaviour
             people.Remove(personToRemove);
 
             peopleFound.Add(personToRemove);
+        }
+
+        if(people.Count ==  0 && runCSVO) {
+            runCSVO = false;
+            toCSVConverter.ListToCSV(peopleFound);
         }
     }
 
@@ -170,7 +183,7 @@ public class DroneController : MonoBehaviour
     private void Start()
     {
         peopleFound = new List<People>();
-
+        toCSVConverter = new ListToCSVConverter();
         // Gets the postion of the controller
         x = this.transform.position.x;
         y = this.transform.position.y;
