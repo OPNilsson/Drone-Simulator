@@ -97,8 +97,6 @@ public class DroneController : MonoBehaviour
                 person.YCords = transform.position.y;
                 removePerson = true;
                 personToRemove = person;
-                Debug.Log(personToRemove.YCords);
-                Debug.Log(personToRemove.XCords);
 
                 person.Spotted();
 
