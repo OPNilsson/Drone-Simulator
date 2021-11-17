@@ -99,7 +99,9 @@ MonoBehaviour:
   num_drones: 5
   num_interest: 3
   num_people: 2
+  num_uavs: 2
   prefab_drone: {fileID: 7051943685874896124, guid: abf1060f06902fb459a0d65ebb274302, type: 3}
   prefab_human: {fileID: 467260902503086205, guid: 01daa9649cc00874db9d9dd7df7bfef8, type: 3}
   prefab_interest: {fileID: 3606346204270355453, guid: 990e5761d2a9988458d21f94f3518f7f, type: 3}
+  prefab_uav: {fileID: 1826963633529051315, guid: 0c6e36842793b824f8263adc742c312e, type: 3}
   width: 2000

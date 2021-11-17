@@ -17,24 +17,20 @@ public class DroneController : MonoBehaviour
     public int num_drones = 0;
     public int num_interest = 0;
     public int num_people = 0;
-
+    public int num_uavs = 0;
     public GameObject prefab_drone;
-
     public GameObject prefab_human;
-
     public GameObject prefab_interest;
-
+    public GameObject prefab_uav;
     public float width = 50;
-
+    private List<Interest> destinations;
     private List<Drone> drones;
-
     private List<Interest> interests;
-
     private List<People> people;
     private List<People> peopleFound;
+    private List<UAV> uavs;
 
     private float x;
-
     private float y;
 
     public void AssignNewTarget(Drone drone)
@@ -65,7 +61,7 @@ public class DroneController : MonoBehaviour
             // Try and find new Interests in the world
             GameObject[] interestObjects = GameObject.FindGameObjectsWithTag("Area of Interest");
 
-            if (interestObjects.Length > 0)
+            if (interestObjects != null && interestObjects.Length > 0)
             {
                 foreach (GameObject iObject in interestObjects)
                 {
@@ -78,6 +74,35 @@ public class DroneController : MonoBehaviour
                 drone.ChangeTarget(gameObject.transform);
             }
         }
+    }
+
+    public void AssignNewTarget(UAV uav, Interest oldDestination)
+    {
+        // Remove previous destination from list
+        destinations.Remove(oldDestination);
+
+        // Create a new destination point
+        GameObject interestObject;
+
+        float x_random = UnityEngine.Random.Range(50, width * 0.75f);  // TOOD: Change the target based on some search heuristic
+        float y_random = UnityEngine.Random.Range(50, height * 0.75f); // TOOD: Change the target based on some search heuristic
+
+        // Instatiate Game Object
+        interestObject = Instantiate(prefab_interest, new Vector3(x_random, y_random, prefab_interest.transform.position.z), Quaternion.identity);
+
+        float area_x_random = 10;
+        float area_y_random = 10;
+
+        Vector3 scale = interestObject.transform.localScale;
+
+        scale.x = area_x_random;
+        scale.y = area_y_random;
+
+        interestObject.transform.localScale = scale;
+
+        destinations.Add((Interest)interestObject.GetComponent(typeof(Interest)));
+
+        uav.ChangeTarget(interestObject.transform);
     }
 
     public void HumanFound(Transform transform)
@@ -111,15 +136,18 @@ public class DroneController : MonoBehaviour
 
     public void InterestDetroyed(Interest interest, Drone drone)
     {
-        // Remove the Intrest from the controller's list
-        try
+        if (drone != null)
         {
-            interests.Remove(interest);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e);
-            Debug.LogWarning("Attempted to remove already removed Interest in InterestDetroyed() inside DroneController");
+            // Remove the Intrest from the controller's list
+            try
+            {
+                interests.Remove(interest);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                Debug.LogWarning("Attempted to remove already removed Interest in InterestDetroyed() inside DroneController");
+            }
         }
 
         AssignNewTarget(drone);
@@ -148,6 +176,32 @@ public class DroneController : MonoBehaviour
         }
     }
 
+    public void ReachedTarget(UAV uav)
+    {
+        Transform target = uav.target;
+
+        // Check if the target was this drone base
+        if (target == gameObject.transform)
+        {
+            StartCoroutine(StartRefuel(uav));
+
+            return; // Don't do the rest of the code
+        }
+
+        // Check what destination it reached
+        foreach (Interest destination in destinations)
+        {
+            if (destination.transform == target)
+            {
+                destination.AddDroneToArea(uav);
+
+                AssignNewTarget(uav, destination);
+
+                return; // Don't loop through the rest
+            }
+        }
+    }
+
     private IEnumerator SpawnDrones()
     {
         drones = new List<Drone>();
@@ -162,6 +216,51 @@ public class DroneController : MonoBehaviour
             droneObject.SendMessage("ChangeTarget", interests[index].transform);
 
             drones.Add((Drone)droneObject.GetComponent(typeof(Drone)));
+
+            yield return new WaitForSeconds(SpawnTimer);
+        }
+    }
+
+    private void SpawnDronesTimer()
+    {
+        StartCoroutine(SpawnDrones());
+    }
+
+    private IEnumerator SpawnUAVs()
+    {
+        uavs = new List<UAV>();
+        GameObject uavObject;
+        GameObject interestObject;
+
+        destinations = new List<Interest>();
+
+        for (int i = 0; i < num_uavs; i++)
+        {
+            // Spawn Initial Destination Area for UAV
+            float x_random = UnityEngine.Random.Range(50, width * 0.75f);
+            float y_random = UnityEngine.Random.Range(50, height * 0.75f);
+
+            // Instatiate Game Object
+            interestObject = Instantiate(prefab_interest, new Vector3(x_random, y_random, prefab_interest.transform.position.z), Quaternion.identity);
+
+            float area_x_random = 10;
+            float area_y_random = 10;
+
+            Vector3 scale = interestObject.transform.localScale;
+
+            scale.x = area_x_random;
+            scale.y = area_y_random;
+
+            interestObject.transform.localScale = scale;
+
+            destinations.Add((Interest)interestObject.GetComponent(typeof(Interest)));
+
+            // Instatiate Game Object
+            uavObject = Instantiate(prefab_uav, new Vector3(x, y, prefab_drone.transform.position.z), Quaternion.identity); // UAVs should spawn at the drone controller coordinates
+
+            uavObject.SendMessage("ChangeTarget", destinations[i].transform);
+
+            uavs.Add((UAV)uavObject.GetComponent(typeof(UAV)));
 
             yield return new WaitForSeconds(SpawnTimer);
         }
@@ -215,7 +314,9 @@ public class DroneController : MonoBehaviour
         // InvokeRepeating("UpdatePathfinding", 1f, PathfindingTimer);
 
         // Spawn Drones on a timer so that it looks more realistic
-        StartCoroutine(SpawnDrones());
+        StartCoroutine(SpawnUAVs()); // UAVs First
+
+        Invoke("SpawnDronesTimer", SpawnTimer * num_uavs); // Drones are spawned after all the uavs have been launched
     }
 
     private IEnumerator StartRefuel(Drone drone)
@@ -233,6 +334,23 @@ public class DroneController : MonoBehaviour
         drone.Refuling = false;
 
         AssignNewTarget(drone);
+    }
+
+    private IEnumerator StartRefuel(UAV uav)
+    {
+        uav.Refuling = true;
+
+        float distance = Vector2.Distance(uav.transform.position, this.transform.position);
+
+        while (uav.fuel < uav.fuel_max && distance <= uav.waypoint_distance)
+        {
+            uav.Refuel();
+            yield return new WaitForSeconds(SpawnTimer);
+        }
+
+        uav.Refuling = false;
+
+        AssignNewTarget(uav, null);
     }
 
     /// <summary>
