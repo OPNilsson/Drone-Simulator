@@ -8,7 +8,7 @@ public class CameraMove : MonoBehaviour
     private float d;
     private Camera main;
     private Vector3 s = new Vector3(0, 0, 0);
-    private float zoom = 1;
+    private float zoom = 100;
 
     private void RedrawCameraBorder(float width, float height)
     {
