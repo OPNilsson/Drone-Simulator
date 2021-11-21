@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using System;
 
 public class People : MonoBehaviour
 {
@@ -13,16 +14,15 @@ public class People : MonoBehaviour
     public Text text;
     private Vector2 direction;
     private float timer = 0;
-
     public People(float xCords, float yCords, float timeToFind, GameObject human)
-    {
+    {       
         XCords = xCords;
         YCords = yCords;
         TimeToFind = timeToFind;
         IsSaved = false;
         Human = human;
     }
-
+    public DateTime TimeWhenFound {get; set;}
     public bool IsSaved { get; set; }
 
     // The time it takes for the human to change direction
@@ -41,6 +41,7 @@ public class People : MonoBehaviour
 
     public void Spotted()
     {
+        TimeWhenFound = DateTime.Now;
         // Stop the human from moving
         speed_movement = 0f;
 
@@ -68,12 +69,12 @@ public class People : MonoBehaviour
 
     private void Start()
     {
-        float x = Random.Range(-1, 1.01f);
-        float y = Random.Range(-1, 1.01f);
+        float x = UnityEngine.Random.Range(-1, 1.01f);
+        float y = UnityEngine.Random.Range(-1, 1.01f);
 
         direction = new Vector2(x, y);
 
-        speed_movement = Random.Range(0, speed_movement); // So that some humans stay where they are
+        speed_movement = UnityEngine.Random.Range(0, speed_movement); // So that some humans stay where they are
     }
 
     private void Update()
