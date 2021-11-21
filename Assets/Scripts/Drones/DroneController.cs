@@ -17,6 +17,7 @@ public class DroneController : MonoBehaviour
     public int num_drones = 0;
     public int num_interest = 0;
     public int num_people = 0;
+    public static DateTime currentStartTime;
 	public int seed = 0;
 
     bool runCSVO = true;
@@ -181,6 +182,7 @@ public class DroneController : MonoBehaviour
 
     private void Start()
     {
+        currentStartTime = DateTime.Now;
 		UnityEngine.Random.InitState(SettingsController.seed);
         peopleFound = new List<People>();
         toCSVConverter = new ListToCSVConverter();
