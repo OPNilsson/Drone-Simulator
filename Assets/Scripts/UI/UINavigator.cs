@@ -12,7 +12,14 @@ public class UINavigator : MonoBehaviour
     public GameObject menuMain;
     public Text MSx;
     public Text MSy;
+    public Text MDSx;
+    public Text MDSy;
     public Text MTS;
+    public Text DMN;
+    public Text DBN;
+    public Text Seed;
+    public Text SN;
+    public Text PoIN;
     public GameObject DMmotor;
     public GameObject DMbat;
     public GameObject DMV;
@@ -25,6 +32,7 @@ public class UINavigator : MonoBehaviour
     public GameObject DBA;
     public GameObject DBC;
     public GameObject DBT;
+    public GameObject worldSettings;
 
     public void dB()
     {
@@ -49,25 +57,38 @@ public class UINavigator : MonoBehaviour
 
     public void updateMap()
     {
-        float Sx = 0, Sy = 0, TS = 0;
-        if (
-        !(float.TryParse(MSx.text, out Sx)
-        && float.TryParse(MSy.text, out Sy)
+        int Sx =1, Sy=1,seed=0, sn=1, poin=1, dmn=1,dbn=0;
+        float TS = 1, DX=0,DY=0;
+
+        
+        if (!(int.TryParse(MSx.text, out Sx)
+        && int.TryParse(MSy.text, out Sy)
+        && int.TryParse(Seed.text, out seed)
+        && int.TryParse(SN.text, out sn)
+        && int.TryParse(PoIN.text, out poin)
+        && int.TryParse(DMN.text, out dmn)
+        && int.TryParse(DBN.text, out dbn)
+        && float.TryParse(MDSx.text, out DX)
+        && float.TryParse(MDSy.text, out DY)
         && float.TryParse(MTS.text, out TS)))
         {
             Debug.Log("parse error");
-            Sx = 1; Sy = 1; TS = 1;
         }
-        /*
-        float Sx =float.Parse(MSx.text);
-        float Sy =float.Parse(MSy.text);
-        float TS =float.Parse(MTS.text);
-        */
-
-        //mapRenderer.setSize((int)(Sx / TS), (int)(Sy / TS), TS);
-
-        mapRenderer.setSize((int)Sx, (int)Sy, TS);
+        
+        //mapRenderer.setSize(Sx, Sy, TS);
+        
+        //SettingsController setCont = worldSettings.GetComponent<SettingsController>();
+        SettingsController.mapHeight=Sx;
+        SettingsController.mapWidth=Sy;
+        SettingsController.number_Drones=dbn;
+        SettingsController.number_Interests=poin;
+        SettingsController.numberOfSurvivors=sn;
+        SettingsController.seed=seed;
+        SettingsController.tileHeight=(int)TS;//shouldn't be int, but not an issue
+        SettingsController.tileWidth=(int)TS;
+        worldSettings.GetComponent<SettingsController>().SpawnMap();
     }
+
     public void updateDM(){
         float s=0,a=0,c=0,t=0;//should be made public and declared outside for external acces
         //OR, could set their values from here...
