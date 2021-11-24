@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 6037031146210055615}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5.7999997, y: 5.7999997, z: 1.16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6037031147071045626}
   m_RootOrder: 0
@@ -163,7 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e97c48e789f227647bb8ced3ed58a98e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PeopleSpawner: {fileID: 0}
+  Map: {fileID: 0}
+  PeopleSpawner: {fileID: 7413762871889898781, guid: 8280344065bac3d48bd91eb0dc066eed, type: 3}
   prefab_drone: {fileID: 7051943685874896124, guid: abf1060f06902fb459a0d65ebb274302, type: 3}
   prefab_human: {fileID: 467260902503086205, guid: 01daa9649cc00874db9d9dd7df7bfef8, type: 3}
   prefab_interest: {fileID: 3606346204270355453, guid: 990e5761d2a9988458d21f94f3518f7f, type: 3}

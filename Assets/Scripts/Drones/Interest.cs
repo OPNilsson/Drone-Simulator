@@ -32,6 +32,11 @@ public class Interest : MonoBehaviour
         }
     }
 
+    public void AddDroneToArea(UAV uav)
+    {
+        Destroy(gameObject);
+    }
+
     private void ReduceInterest()
     {
         intrestLevel -= InterestDropRate;
