@@ -238,8 +238,8 @@ GameObject:
   - component: {fileID: 1826963633529051321}
   - component: {fileID: 1826963633529051318}
   - component: {fileID: 1826963633529051319}
+  - component: {fileID: 440147172031990233}
   - component: {fileID: 1826963633529051316}
-  - component: {fileID: 1307319567689794273}
   - component: {fileID: 1826963633529051314}
   m_Layer: 0
   m_Name: UAV
@@ -301,6 +301,29 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &440147172031990233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826963633529051315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc64dc6dade4054ca870be096872aa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fovRenderer: {fileID: 1826963633840599078}
+  fuel: 100
+  fuel_max: 100
+  FuelConsumptionRate: 0.025
+  fuelSlider: {fileID: 1826963634211096850}
+  MinFuel: 10
+  speed_movement: 1000
+  speed_turn: 45
+  sprite: {fileID: 1826963634301069279}
+  target: {fileID: 0}
+  waypoint_distance: 50
 --- !u!114 &1826963633529051316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,29 +352,6 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
---- !u!114 &1307319567689794273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1826963633529051315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aacf604ec94ed5948a56b6c8870ad4c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fovRenderer: {fileID: 1826963633840599078}
-  fuel: 100
-  fuel_max: 100
-  FuelConsumptionRate: 0.025
-  fuelSlider: {fileID: 1826963634211096850}
-  MinFuel: 10
-  speed_movement: 1750
-  speed_turn: 45
-  sprite: {fileID: 1826963634301069279}
-  target: {fileID: 0}
-  waypoint_distance: 50
 --- !u!114 &1826963633529051314
 MonoBehaviour:
   m_ObjectHideFlags: 0

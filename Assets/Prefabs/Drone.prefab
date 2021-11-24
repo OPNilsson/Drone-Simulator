@@ -493,7 +493,7 @@ MonoBehaviour:
   FuelConsumptionRate: 0.05
   fuelSlider: {fileID: 4570891839269390163}
   MinFuel: 10
-  speed_movement: 1000
+  speed_movement: 500
   speed_turn: 180
   sprite: {fileID: 0}
   target: {fileID: 0}

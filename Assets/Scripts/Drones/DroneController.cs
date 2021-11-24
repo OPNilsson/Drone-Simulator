@@ -217,7 +217,7 @@ public class DroneController : MonoBehaviour
 
             drones.Add((Drone)droneObject.GetComponent(typeof(Drone)));
 
-            yield return new WaitForSeconds(SpawnTimer);
+            yield return new WaitForSeconds(SpawnTimer * 2);
         }
     }
 
@@ -258,9 +258,9 @@ public class DroneController : MonoBehaviour
             // Instatiate Game Object
             uavObject = Instantiate(prefab_uav, new Vector3(x, y, prefab_drone.transform.position.z), Quaternion.identity); // UAVs should spawn at the drone controller coordinates
 
-            uavObject.SendMessage("ChangeTarget", destinations[i].transform);
-
             uavs.Add((UAV)uavObject.GetComponent(typeof(UAV)));
+
+            uavs[i].ChangeTarget(destinations[i].transform);
 
             yield return new WaitForSeconds(SpawnTimer);
         }
