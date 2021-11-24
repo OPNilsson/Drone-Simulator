@@ -17,6 +17,8 @@ public class DroneController : MonoBehaviour
     public int num_drones = 0;
     public int num_interest = 0;
     public int num_people = 0;
+    public float drone_speed=0;
+    public float drone_battery=0;
     public static DateTime currentStartTime;
 	public int seed = 0;
 
@@ -38,6 +40,7 @@ public class DroneController : MonoBehaviour
 
     private List<People> people;
     private List<People> peopleFound;
+    private List<Int
 
     private float x;
 
@@ -180,19 +183,42 @@ public class DroneController : MonoBehaviour
         }
     }
 
-    private void Start()
+     private void Start()
+    {
+        startSimulation();
+    }
+
+    public void startSimulation()
     {
         currentStartTime = DateTime.Now;
 		UnityEngine.Random.InitState(SettingsController.seed);
-        peopleFound = new List<People>();
-        toCSVConverter = new ListToCSVConverter();
+
+        foreach(People people in peopleFound){
+            people.gameObject.Destroy(true);
+        }
+        peopleFound.Clear();
+
+        //peopleFound = new List<People>();
+        if(toCSVConverter == null){
+            toCSVConverter = new ListToCSVConverter();
+        }
+        
         // Gets the postion of the controller
         x = this.transform.position.x;
         y = this.transform.position.y;
 
         // Spawn Interests and People
-        interests = new List<Interest>();
-        people = new List<People>();
+        foreach(Interest interest in interests){
+            interest.gameObject.Destroy(true);
+        }
+        interests.Clear();
+        //interests = new List<Interest>();
+        foreach(People peep in people){
+            peep.gameObject.Destroy(true);
+        }
+        interests.Clear();
+        people.Clear();
+        //people = new List<People>();
         GameObject interestObject;
         for (int i = 0; i < num_interest; i++)
         {

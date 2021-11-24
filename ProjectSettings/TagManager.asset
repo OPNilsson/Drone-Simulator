@@ -3,12 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Drone
-  - Area of Interest
-  - Obstacle
-  - Drone Base
-  - Human
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -17,8 +12,8 @@ TagManager:
   - Water
   - UI
   - Obstacle
-  - Outside Main Cam
-  - Target
+  - 
+  - 
   - 
   - 
   - 
