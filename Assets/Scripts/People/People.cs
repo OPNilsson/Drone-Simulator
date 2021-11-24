@@ -81,4 +81,8 @@ public class People : MonoBehaviour
     {
         timer += Time.deltaTime;
     }
+
+    public void destroy(){
+        GameObject.Destroy(gameObject);
+    }
 }

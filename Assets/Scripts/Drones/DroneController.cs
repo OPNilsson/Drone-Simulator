@@ -17,6 +17,11 @@ public class DroneController : MonoBehaviour
     public int num_drones = 0;
     public int num_interest = 0;
     public int num_people = 0;
+    public float drone_speed=0;
+    public float drone_battery=0;
+    public int map_sizex=100;
+    public int map_sizey=100;
+    public float map_scale=1;
     public static DateTime currentStartTime;
 	public int seed = 0;
 
@@ -32,12 +37,13 @@ public class DroneController : MonoBehaviour
 
     public float width = 50;
 
-    private List<Drone> drones;
+    public List<Drone> drones;
 
-    private List<Interest> interests;
+    public List<Interest> interests;
 
-    private List<People> people;
-    private List<People> peopleFound;
+    public List<People> people;
+    public List<People> peopleFound;
+    public List<int> dronesOnPoI;
 
     private float x;
 
@@ -180,31 +186,80 @@ public class DroneController : MonoBehaviour
         }
     }
 
-    private void Start()
+     private void Start()
+    {
+        startSimulation();
+    }
+
+    public void startSimulation()
     {
         currentStartTime = DateTime.Now;
 		UnityEngine.Random.InitState(SettingsController.seed);
-        peopleFound = new List<People>();
-        toCSVConverter = new ListToCSVConverter();
+        if(peopleFound==null){
+            peopleFound = new List<People>();
+        }else{
+            foreach(People people in peopleFound){
+                people.destroy();
+            }
+            peopleFound.Clear();
+        }
+        
+        if(toCSVConverter == null){
+            toCSVConverter = new ListToCSVConverter();
+        }
+
+        if(drones==null){
+            drones = new List<Drone>();
+        }else{
+            foreach(Drone drone in drones){
+                drone.destroy();
+            }
+            drones.Clear();
+        }
+        
         // Gets the postion of the controller
         x = this.transform.position.x;
         y = this.transform.position.y;
 
         // Spawn Interests and People
-        interests = new List<Interest>();
-        people = new List<People>();
+        if(interests == null){
+           interests = new List<Interest>(); 
+        }
+        else{
+            foreach(Interest interest in interests){
+                interest.destroy();
+            }
+            interests.Clear();
+        }
+        if(dronesOnPoI == null){
+            dronesOnPoI=new List<int>();
+        }else{
+            dronesOnPoI.Clear();
+        }
+        
+        if(people == null){
+            people = new List<People>();
+        }else{
+            foreach(People peep in people){
+                peep.destroy();
+            }
+            people.Clear();
+        }
         GameObject interestObject;
+        float sx = map_sizex*map_scale;
+        float sy = map_sizey*map_scale;
+        int peopleSpawned=0;
         for (int i = 0; i < num_interest; i++)
         {
-            float x_random = UnityEngine.Random.Range(50, width);
-            float y_random = UnityEngine.Random.Range(50, height);
+            float x_random = UnityEngine.Random.Range(0, sx);
+            float y_random = UnityEngine.Random.Range(0, sy);
 
             // Instatiate Game Object
             interestObject = Instantiate(prefab_interest, new Vector3(x_random, y_random, prefab_interest.transform.position.z), Quaternion.identity);
 
             // Makes the area of the cirlce random
-            float area_x_random = UnityEngine.Random.Range(50, 300); // a human is 25 units van is 300 x 150
-            float area_y_random = UnityEngine.Random.Range(50, 300);
+            float area_x_random = UnityEngine.Random.Range(sx/(4*num_interest), sx/num_interest); // a human is 25 units van is 300 x 150
+            float area_y_random = UnityEngine.Random.Range(sy/(4*num_interest), sy/num_interest);
 
             Vector3 scale = interestObject.transform.localScale;
 
@@ -214,14 +269,21 @@ public class DroneController : MonoBehaviour
             interestObject.transform.localScale = scale;
 
             interests.Add((Interest)interestObject.GetComponent(typeof(Interest)));
-
+            dronesOnPoI.Add(0);
             // Spawn People
             GameObject peopleObject;
-            for (int p = UnityEngine.Random.Range(0, num_people); p < num_people; p++)
+            int poIPeople=0;
+            if(i < num_interest-1){
+                poIPeople=UnityEngine.Random.Range(0,Mathf.Min((num_people*2)/num_interest, num_people-peopleSpawned));
+            }else{
+                poIPeople=num_people-peopleSpawned;
+            }
+            
+            for (int p = 0 ; p < poIPeople; p++)
             {
-                // TODO: This method is not guranteed to be inside the area
-
-                peopleObject = Instantiate(prefab_human, new Vector3(x_random + (p * 10), y_random + (p * 10), prefab_human.transform.position.z), Quaternion.identity);
+                float xrand=UnityEngine.Random.Range(-area_x_random,area_x_random);
+                float yrand=UnityEngine.Random.Range(-area_y_random,area_y_random);
+                peopleObject = Instantiate(prefab_human, new Vector3(xrand + x_random, yrand + y_random, prefab_human.transform.position.z), Quaternion.identity);
 
                 people.Add((People)peopleObject.GetComponent(typeof(People)));
             }
