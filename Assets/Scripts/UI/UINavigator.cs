@@ -12,7 +12,14 @@ public class UINavigator : MonoBehaviour
     public GameObject menuMain;
     public Text MSx;
     public Text MSy;
+    public Text MDSx;
+    public Text MDSy;
     public Text MTS;
+    public Text DMN;
+    public Text DBN;
+    public Text Seed;
+    public Text SN;
+    public Text PoIN;
     public GameObject DMmotor;
     public GameObject DMbat;
     public GameObject DMV;
@@ -25,11 +32,7 @@ public class UINavigator : MonoBehaviour
     public GameObject DBA;
     public GameObject DBC;
     public GameObject DBT;
-<<<<<<< Updated upstream:Assets/Scripts/UINavigator.cs
-=======
     public GameObject worldSettings;
-    public GameObject droneBase;
->>>>>>> Stashed changes:Assets/Scripts/UI/UINavigator.cs
 
     public void dB()
     {
@@ -54,22 +57,23 @@ public class UINavigator : MonoBehaviour
 
     public void updateMap()
     {
-        float Sx = 0, Sy = 0, TS = 0;
-        if (
-        !(float.TryParse(MSx.text, out Sx)
-        && float.TryParse(MSy.text, out Sy)
+        int Sx =1, Sy=1,seed=0, sn=1, poin=1, dmn=1,dbn=0;
+        float TS = 1, DX=0,DY=0;
+
+        
+        if (!(int.TryParse(MSx.text, out Sx)
+        && int.TryParse(MSy.text, out Sy)
+        && int.TryParse(Seed.text, out seed)
+        && int.TryParse(SN.text, out sn)
+        && int.TryParse(PoIN.text, out poin)
+        && int.TryParse(DMN.text, out dmn)
+        && int.TryParse(DBN.text, out dbn)
+        && float.TryParse(MDSx.text, out DX)
+        && float.TryParse(MDSy.text, out DY)
         && float.TryParse(MTS.text, out TS)))
         {
             Debug.Log("parse error");
-            Sx = 1; Sy = 1; TS = 1;
         }
-<<<<<<< Updated upstream:Assets/Scripts/UINavigator.cs
-        /*
-        float Sx =float.Parse(MSx.text);
-        float Sy =float.Parse(MSy.text);
-        float TS =float.Parse(MTS.text);
-        */
-=======
         
         //mapRenderer.setSize(Sx, Sy, TS);
         
@@ -82,25 +86,9 @@ public class UINavigator : MonoBehaviour
         SettingsController.seed=seed;
         SettingsController.tileHeight=(int)TS;//shouldn't be int, but not an issue
         SettingsController.tileWidth=(int)TS;
-        updateDM();
-        updateDB();
-        SettingsController sc =worldSettings.GetComponent<SettingsController>();
-        DroneController dc = droneBase.GetComponent<DroneController>();
-        dc.num_drones=dbn;
-        dc.num_interest=poin;
-        dc.num_people=sn;
-        dc.seed=seed;
-        sc.seed=seed;
-        dc.gameObject.transform.position = new Vector3(DX, DY, 0);
-        sc.SpawnMap();
-        dc.startSimulation();
+        worldSettings.GetComponent<SettingsController>().SpawnMap();
     }
->>>>>>> Stashed changes:Assets/Scripts/UI/UINavigator.cs
 
-        //mapRenderer.setSize((int)(Sx / TS), (int)(Sy / TS), TS);
-
-        mapRenderer.setSize((int)Sx, (int)Sy, TS);
-    }
     public void updateDM(){
         float s=0,a=0,c=0,t=0;//should be made public and declared outside for external acces
         //OR, could set their values from here...
@@ -178,9 +166,5 @@ public class UINavigator : MonoBehaviour
         DBA.GetComponent<TextMeshProUGUI>().text=a.ToString();
         DBC.GetComponent<TextMeshProUGUI>().text=c.ToString();
         DBT.GetComponent<TextMeshProUGUI>().text=t.ToString();
-
-        DroneController dc = droneBase.GetComponent<DroneController>();
-        dc.drone_speed=s;
-        dc.drone_battery=t;
     }
 }
