@@ -41,7 +41,8 @@ public class UAV : MonoBehaviour
         {
             foreach (Transform visibleTarget in fov.visibleTargets)
             {
-                control.HumanFound(visibleTarget);
+                //control.HumanFound(visibleTarget, this, target);
+                //disabled because modified for drone only... this is a UAV
             }
         }
 

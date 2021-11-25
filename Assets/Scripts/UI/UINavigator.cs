@@ -20,6 +20,11 @@ public class UINavigator : MonoBehaviour
     public Text Seed;
     public Text SN;
     public Text PoIN;
+    public Text WSX1;
+    public Text WSY1;
+    public Text WSX2;
+    public Text WSY2;
+    public Text WSD;
     public GameObject DMmotor;
     public GameObject DMbat;
     public GameObject DMV;
@@ -33,6 +38,7 @@ public class UINavigator : MonoBehaviour
     public GameObject DBC;
     public GameObject DBT;
     public GameObject worldSettings;
+    public GameObject droneBase;
 
     public void dB()
     {
@@ -58,35 +64,56 @@ public class UINavigator : MonoBehaviour
     public void updateMap()
     {
         int Sx =1, Sy=1,seed=0, sn=1, poin=1, dmn=1,dbn=0;
-        float TS = 1, DX=0,DY=0;
+        float TS = 1, DX=0,DY=0,wsx1=0,wsx2=0,wsy1=0,wsy2=0,wsd=0;
 
         
-        if (!(int.TryParse(MSx.text, out Sx)
-        && int.TryParse(MSy.text, out Sy)
-        && int.TryParse(Seed.text, out seed)
-        && int.TryParse(SN.text, out sn)
-        && int.TryParse(PoIN.text, out poin)
-        && int.TryParse(DMN.text, out dmn)
-        && int.TryParse(DBN.text, out dbn)
-        && float.TryParse(MDSx.text, out DX)
-        && float.TryParse(MDSy.text, out DY)
-        && float.TryParse(MTS.text, out TS)))
-        {
-            Debug.Log("parse error");
-        }
+        if (!int.TryParse(MSx.text, out Sx)) Debug.Log("MSx parse error");
+        if (!int.TryParse(MSy.text, out Sy)) Debug.Log("MSy parse error");
+        if (!int.TryParse(Seed.text, out seed)) Debug.Log("Seed parse error");
+        if (!int.TryParse(SN.text, out sn)) Debug.Log("SN parse error");
+        if (!int.TryParse(PoIN.text, out poin)) Debug.Log("PoIN parse error");
+        //if (!int.TryParse(DMN.text, out dmn)) Debug.Log("DMN parse error");
+        if (!int.TryParse(DBN.text, out dbn)) Debug.Log("DBN parse error");
+        if (!float.TryParse(MDSx.text, out DX)) Debug.Log("MDSx parse error");
+        if (!float.TryParse(MDSy.text, out DY)) Debug.Log("MDSy parse error");
+        if (!float.TryParse(MTS.text, out TS)) Debug.Log("MTS parse error");
+        if (!float.TryParse(WSX1.text, out wsx1)) Debug.Log("WSX1 parse error");
+        if (!float.TryParse(WSY1.text, out wsy1)) Debug.Log("WSY1 parse error");
+        if (!float.TryParse(WSX2.text, out wsx2)) Debug.Log("WSX2 parse error");
+        if (!float.TryParse(WSY2.text, out wsy2)) Debug.Log("WSY2 parse error");
+        if (!float.TryParse(WSD.text, out wsd)) Debug.Log("WSD parse error");
         
         //mapRenderer.setSize(Sx, Sy, TS);
         
         //SettingsController setCont = worldSettings.GetComponent<SettingsController>();
-        SettingsController.mapHeight=Sx;
-        SettingsController.mapWidth=Sy;
-        SettingsController.number_Drones=dbn;
-        SettingsController.number_Interests=poin;
-        SettingsController.numberOfSurvivors=sn;
-        SettingsController.seed=seed;
-        SettingsController.tileHeight=(int)TS;//shouldn't be int, but not an issue
-        SettingsController.tileWidth=(int)TS;
-        worldSettings.GetComponent<SettingsController>().SpawnMap();
+        //SettingsController.mapHeight=Sx;
+        //SettingsController.mapWidth=Sy;
+        //SettingsController.number_Drones=dbn;
+        //SettingsController.number_Interests=poin;
+        //SettingsController.numberOfSurvivors=sn;
+        //SettingsController.seed=seed;
+        //SettingsController.tileHeight=(int)TS;//shouldn't be int, but not an issue
+        //SettingsController.tileWidth=(int)TS;
+        updateDM();
+        updateDB();
+        SettingsController sc =worldSettings.GetComponent<SettingsController>();
+        DroneController dc = droneBase.GetComponent<DroneController>();
+        dc.num_drones=dbn;
+        dc.num_interest=poin;
+        dc.num_people=sn;
+        dc.seed=seed;
+        dc.map_sizex=Sx;
+        dc.map_sizey=Sy;
+        dc.time_scale=TS;
+        dc.gameObject.transform.position = new Vector3(DX, DY, 30);
+        dc.wsx1=wsx1;
+        dc.wsy1=wsy1;
+        dc.wsx2=wsx2;
+        dc.wsy2=wsy2;
+        dc.wd=wsd;
+        //sc.SpawnMap();
+        //sc.ClearMap();
+        dc.startSim();
     }
 
     public void updateDM(){
@@ -166,5 +193,9 @@ public class UINavigator : MonoBehaviour
         DBA.GetComponent<TextMeshProUGUI>().text=a.ToString();
         DBC.GetComponent<TextMeshProUGUI>().text=c.ToString();
         DBT.GetComponent<TextMeshProUGUI>().text=t.ToString();
+
+        DroneController dc = droneBase.GetComponent<DroneController>();
+        dc.drone_speed=s;
+        dc.drone_battery=t;
     }
 }

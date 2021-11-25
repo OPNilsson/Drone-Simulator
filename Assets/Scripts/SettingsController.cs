@@ -100,7 +100,7 @@ public class SettingsController : MonoBehaviour
         {
             DestroyImmediate(map, true);
         }
-        map = Instantiate(Map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        //map = Instantiate(Map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 
         // map.GetComponent<GridManager>().Spawn(Sx, Sy, TS);
 
@@ -109,7 +109,7 @@ public class SettingsController : MonoBehaviour
         {
             DestroyImmediate(peopleSpawner, true);
         }
-        peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        //peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 
         //peopleSpawner.SendMessage("Exterminate"); // Makes Sure that there are no people already there
         // peopleSpawner.Spawn(survivors, Sx, Sy, seed, TS);
@@ -143,8 +143,8 @@ public class SettingsController : MonoBehaviour
         {
             DestroyImmediate(peopleSpawner, true);
         }
-        peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        //peopleSpawner = Instantiate(PeopleSpawner, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         //peopleSpawner.SendMessage("Exterminate"); // Makes Sure that there are no people already there
-        peopleSpawner.SendMessage("Spawn", new ValueTuple<int, int, int, int>(numberOfSurvivors, mapWidth, mapHeight, seed));
+        //peopleSpawner.SendMessage("Spawn", new ValueTuple<int, int, int, int>(numberOfSurvivors, mapWidth, mapHeight, seed));
     }
 }

@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 444169177909321003}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1099, y: 828, z: 40}
-  m_LocalScale: {x: 300, y: 150, z: 1}
+  m_LocalScale: {x: 3, y: 1.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -99,6 +99,13 @@ MonoBehaviour:
   num_drones: 5
   num_interest: 3
   num_people: 2
+  map_sizex: 500
+  map_sizey: 500
+  time_scale: 1
+  drone_speed: 20
+  drone_battery: 1800
+  seed: 0
+  toCSVConverter: {fileID: 0}
   num_uavs: 2
   prefab_drone: {fileID: 7051943685874896124, guid: abf1060f06902fb459a0d65ebb274302, type: 3}
   prefab_human: {fileID: 467260902503086205, guid: 01daa9649cc00874db9d9dd7df7bfef8, type: 3}

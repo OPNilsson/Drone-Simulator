@@ -9,21 +9,25 @@ public class Drone : MonoBehaviour
     public MeshRenderer fovRenderer;
     public float fuel = 100f;
     public float fuel_max = 100f;
-    public float FuelConsumptionRate = 0.05f;
+    public float FuelConsumptionRate = 1f;
     public Slider fuelSlider;
-    public int MinFuel = 10;
-
+    public float MinFuel = 10f;
+    public float timescale=1f;
     public float speed_movement = 500f;
     public float speed_turn = 100f;
     public SpriteRenderer sprite;
     public Transform target;
     public float waypoint_distance = 20f;
-    private const float UpdateTime = 0.05f;
+    private const float UpdateTime = 0.1f;
     private Rigidbody2D body;
     private DroneController control;
     private FOV fov;
     private Path path;
     private Seeker seeker;
+    
+    //patrol relevant
+    public GameObject subtarget;
+    public bool patroling=false;
 
     private int waypoint_current = 0;
 
@@ -41,13 +45,17 @@ public class Drone : MonoBehaviour
         {
             foreach (Transform visibleTarget in fov.visibleTargets)
             {
-                control.HumanFound(visibleTarget);
+                if(target==null){
+                    control.HumanFound(visibleTarget,this, control.gameObject.transform);
+                }else{
+                    control.HumanFound(visibleTarget,this, target);
+                }
             }
         }
 
         if (target == null)
         {
-            control.AssignNewTarget(this);
+            control.AssignNewTarget(this, true);
         }
 
         if (path == null)
@@ -58,7 +66,12 @@ public class Drone : MonoBehaviour
         // Finished it's path
         if (waypoint_current >= path.vectorPath.Count)
         {
-            float distanceToTarget = Vector2.Distance(body.position, target.position);
+            float distanceToTarget;
+            if(patroling){
+                distanceToTarget= Vector2.Distance(body.position, subtarget.transform.position);
+            }else{
+                distanceToTarget= Vector2.Distance(body.position, target.position);
+            }
 
             // Make sure it's at the target
             if (distanceToTarget <= waypoint_distance)
@@ -71,7 +84,10 @@ public class Drone : MonoBehaviour
 
         Vector2 direction = ((Vector2)path.vectorPath[waypoint_current] - body.position).normalized;
 
-        Vector2 force = direction * speed_movement * Time.deltaTime;
+        Vector2 force = direction * speed_movement*0.8f*timescale;
+
+        //inertia= max speed * drag * mass * delta time. 
+        //AddForce takes into account delta time, drag*mass=0.8
 
         body.AddForce(force); // Moves the drone
 
@@ -111,7 +127,7 @@ public class Drone : MonoBehaviour
 
     public void Refuel()
     {
-        fuel += FuelConsumptionRate * 10;
+        fuel += FuelConsumptionRate * 100;
 
         fuelSlider.value = fuel;
     }
@@ -216,14 +232,23 @@ public class Drone : MonoBehaviour
         // Makes sure not to create a new path while already calculating one
         if (seeker.IsDone() && target != null)
         {
-            seeker.StartPath(body.position, target.position, OnPathComplete);
+            if(patroling){
+                seeker.StartPath(body.position, subtarget.transform.position, OnPathComplete);
+            }else{
+                seeker.StartPath(body.position, target.position, OnPathComplete);
+            }
+            
         }
     }
 
     private void UseFuel()
     {
-        fuel -= FuelConsumptionRate;
+        fuel -= FuelConsumptionRate*Time.deltaTime;
 
         fuelSlider.value = fuel;
+    }
+
+    public void destroy(){
+        GameObject.Destroy(gameObject);
     }
 }

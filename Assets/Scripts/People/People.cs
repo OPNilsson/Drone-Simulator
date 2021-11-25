@@ -9,11 +9,12 @@ public class People : MonoBehaviour
     public Rigidbody2D body;
     public Canvas canvas;
     public GameObject Human;
-    public float speed_movement = 100f;
+    public float speed_movement = 0.5f;
+    public float time_scale=1;
     public SpriteRenderer sprite;
     public Text text;
     private Vector2 direction;
-    private float timer = 0;
+    private float timer = 0, moveTimer=0;
     public People(float xCords, float yCords, float timeToFind, GameObject human)
     {       
         XCords = xCords;
@@ -62,9 +63,9 @@ public class People : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 force = direction * speed_movement * Time.deltaTime;
+        Vector2 force = direction * speed_movement * time_scale;
 
-        body.AddForce(force); // Moves the drone
+        body.velocity=force; // Moves the drone *person*
     }
 
     private void Start()
@@ -79,6 +80,16 @@ public class People : MonoBehaviour
 
     private void Update()
     {
-        timer += Time.deltaTime;
+        timer += Time.deltaTime*time_scale;
+        moveTimer+= Time.deltaTime*time_scale;
+        if (moveTimer>20){
+            moveTimer=0f;
+            direction.x = UnityEngine.Random.Range(-1, 1.01f);
+            direction.y = UnityEngine.Random.Range(-1, 1.01f);
+        }
+    }
+
+    public void destroy(){
+        GameObject.Destroy(gameObject);
     }
 }

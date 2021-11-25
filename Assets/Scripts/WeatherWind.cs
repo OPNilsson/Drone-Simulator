@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class WeatherWind : MonoBehaviour
 {
-    //The direction of the weather/gravity
-    public float xWinddirection, yWinddirection = 0;
+    //The direction of the weather
+    public float xWinddirection1, yWinddirection1,xWinddirection2, yWinddirection2 = 0;
+    public float duration=0;
     //Set direction of wind
     Vector2 windDir;
     //Gravities force on a object.
-    public float windSpeed = 9.8f;
     public bool staticWinddirection = true;
     bool coroutineIsRunning = false;
 
-    public int minXWinddirection, maxXWinddirection;
-
     private Rigidbody2D rb;
+    public float time_scale;
 
     void Start()
     {
-        windDir = new Vector2(xWinddirection, yWinddirection);
+        windDir = new Vector2(xWinddirection1, yWinddirection1);
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;
     }
@@ -33,13 +32,12 @@ public class WeatherWind : MonoBehaviour
     //Wind pushing on the drone
     void WindAffect()
     {
-        windDir = new Vector2(xWinddirection, yWinddirection);
-          rb.AddForce(windDir * windSpeed * 1, ForceMode2D.Force);
+        rb.AddForce(windDir*(0.8f*time_scale*time_scale), ForceMode2D.Force);
 
         if (!staticWinddirection && !coroutineIsRunning)
         {
 
-            StartCoroutine(ChangeWindDirection(minXWinddirection, maxXWinddirection, 1f));
+            StartCoroutine(ChangeWindDirection(xWinddirection1, yWinddirection1,xWinddirection2,yWinddirection2, duration));
         }
         else if (staticWinddirection)
         {
@@ -48,30 +46,34 @@ public class WeatherWind : MonoBehaviour
          
     }
 
-    IEnumerator ChangeWindDirection(float min, float max, float duration)
+    IEnumerator ChangeWindDirection(float x1, float y1,float x2,float y2, float duration)
     {
         coroutineIsRunning = true;
         float elapsed = 0.0f;
-        if (xWinddirection == max)
+        if (windDir.x == x1)
         {
             while (elapsed < duration)
             {
-                xWinddirection = Mathf.Lerp(max, min, elapsed / duration);
+                windDir.x = Mathf.Lerp(x1, x2, elapsed / duration);
+                windDir.y = Mathf.Lerp(y1, y2, elapsed / duration);
                 elapsed += Time.deltaTime;
                 yield return null;
             }
 
-            xWinddirection = min;
+            windDir.x = x2;
+            windDir.y = y2;
         }
         else { 
         while (elapsed < duration)
         {
-            xWinddirection = Mathf.Lerp(min, max, elapsed / duration);
+            windDir.x = Mathf.Lerp(x2, x1, elapsed / duration);
+            windDir.y = Mathf.Lerp(y2, y1, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null;
         }
         
-        xWinddirection = max;
+        windDir.x = x1;
+        windDir.y = y1;
         }
         coroutineIsRunning = false;
     }

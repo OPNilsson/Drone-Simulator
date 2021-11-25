@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2131617055714619185}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 25, y: 25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children: []
   m_Father: {fileID: 9057999677500106870}
   m_RootOrder: 0
@@ -320,7 +320,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -0.00000023842}
-  m_SizeDelta: {x: 39.5663, y: 4.4503}
+  m_SizeDelta: {x: 4, y: 0.45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4570891839269390163
 MonoBehaviour:
@@ -425,7 +425,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 12
+  m_Radius: 1
 --- !u!50 &-5398987542896795397
 Rigidbody2D:
   serializedVersion: 4
@@ -493,11 +493,14 @@ MonoBehaviour:
   FuelConsumptionRate: 0.05
   fuelSlider: {fileID: 4570891839269390163}
   MinFuel: 10
+  timescale: 1
   speed_movement: 500
   speed_turn: 180
   sprite: {fileID: 0}
   target: {fileID: 0}
   waypoint_distance: 50
+  subtarget: {fileID: 0}
+  patroling: 0
 --- !u!114 &3407621787249488027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,7 +524,7 @@ MonoBehaviour:
     m_Bits: 256
   viewAngle: 90
   viewMeshFilter: {fileID: 3306004661068558576}
-  viewRadius: 200
+  viewRadius: 20
   visibleTargets: []
 --- !u!1 &7767710908446481951
 GameObject:
