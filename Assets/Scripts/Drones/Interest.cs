@@ -9,7 +9,11 @@ public class Interest : MonoBehaviour
     private const int InterestTimer = 1; // Time in seconds untill the interest falls again
 
     private List<Drone> drones; // The drones currently inside the area
-    private float intrestLevel = 1;
+    public float intrestLevel = 1;
+    public float peekInterest=1;
+    public float time_scale=1;
+    public float sizex=1;
+    public float sizey=1;
 
     public void AddDroneToArea(Drone drone)
     {
@@ -39,8 +43,8 @@ public class Interest : MonoBehaviour
 
     private void ReduceInterest()
     {
-        intrestLevel -= InterestDropRate;
-
+        intrestLevel -= InterestDropRate*time_scale;
+        if(intrestLevel<0){intrestLevel=0;}
         UpdateSprite();
     }
 
@@ -54,7 +58,7 @@ public class Interest : MonoBehaviour
         // If the sprite can no longer be seen then delte it
         if (intrestLevel > 0)
         {
-            sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, intrestLevel);
+            sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, intrestLevel/peekInterest);
         }
         else
         {
