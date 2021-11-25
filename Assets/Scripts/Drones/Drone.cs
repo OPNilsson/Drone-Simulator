@@ -226,4 +226,8 @@ public class Drone : MonoBehaviour
 
         fuelSlider.value = fuel;
     }
+
+    public void destroy(){
+        GameObject.Destroy(gameObject);
+    }
 }

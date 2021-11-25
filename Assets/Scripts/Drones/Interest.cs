@@ -70,4 +70,8 @@ public class Interest : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public void destroy(){
+        GameObject.Destroy(gameObject);
+    }
 }
