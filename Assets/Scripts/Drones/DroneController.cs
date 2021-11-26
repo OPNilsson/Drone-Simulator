@@ -151,26 +151,27 @@ public class DroneController : MonoBehaviour
         uav.ChangeTarget(interestObject.transform);*/ //without UAV
     }
 
-    public void HumanFound(Transform transform, Drone drone, Transform poi)
+    public void HumanFound(Transform trns, Drone drone, Transform poi)
     {
         bool removePerson = false;
         People personToRemove = null;
         Interest interest= poi.gameObject.GetComponent<Interest>();
         foreach (People person in people)
         {
-            if (transform == person.transform)
+            if (trns == person.transform)
             {
-                person.XCords = transform.position.x;
-                person.YCords = transform.position.y;
+                person.XCords = trns.position.x;
+                person.YCords = trns.position.y;
                 removePerson = true;
                 personToRemove = person;
-                float deltax = transform.position.x-poi.position.x;
-                float deltay = transform.position.y-poi.position.y;
+                float deltax = trns.position.x-poi.position.x;
+                float deltay = trns.position.y-poi.position.y;
                 float dx=deltax/interest.sizex;
                 float dy=deltay/interest.sizey;
-                if(dx*dx+dy*dy >0.25){ //Outside PoI
+                float dist2 =(dx*dx+dy*dy);
+                if(dist2 >0.25f && dist2<0.5f){ //Outside PoI
                     // Instatiate new PoI
-                    GameObject interestObject = Instantiate(prefab_interest, new Vector3(transform.position.x+deltax, transform.position.y+deltay, prefab_interest.transform.position.z), Quaternion.identity);
+                    GameObject interestObject = Instantiate(prefab_interest, new Vector3(trns.position.x+deltax, trns.position.y+deltay, prefab_interest.transform.position.z), Quaternion.identity);
 
                     Vector3 scale = interestObject.transform.localScale;
 
@@ -188,8 +189,8 @@ public class DroneController : MonoBehaviour
                     interestSpawned.peekInterest=interest.intrestLevel;
 
                     dronesOnPoI.Add(0);
-                }else if (dx*dx+dy*dy >1){//randomly found, place PoI on person
-                    GameObject interestObject = Instantiate(prefab_interest, new Vector3(transform.position.x, transform.position.y, prefab_interest.transform.position.z), Quaternion.identity);
+                }else if (dist2 >0.5f){//randomly found, place PoI on person
+                    GameObject interestObject = Instantiate(prefab_interest, new Vector3(trns.position.x, trns.position.y, prefab_interest.transform.position.z), Quaternion.identity);
 
                     Vector3 scale = interestObject.transform.localScale;
 
@@ -208,7 +209,7 @@ public class DroneController : MonoBehaviour
 
                 person.Spotted();
 
-                Debug.Log("Person has been spotted by " + name + " @ " + transform.position + "!");
+                Debug.Log("Person has been spotted by " + name + " @ " + trns.position + "!");
                 Debug.Log("Still looking for " + (people.Count - 1) + " People");
 
                 break;
@@ -408,6 +409,7 @@ public class DroneController : MonoBehaviour
 
     public void startSim()
     {
+        runCSVO=true;
         int peopleSpawned=0;
         alternating= (wd!=0);
         wind.x=wsx1;wind.y=wsy1;
