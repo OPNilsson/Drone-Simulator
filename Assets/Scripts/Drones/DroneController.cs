@@ -477,7 +477,7 @@ public class DroneController : MonoBehaviour
             Interest interest=interestObject.GetComponent<Interest>();
             interests.Add(interest);
             interest.time_scale=time_scale;
-            interest.intrestLevel=area_x_random*area_y_random/1000f;
+            interest.intrestLevel=area_x_random*area_y_random/800f;
             interest.peekInterest=interest.intrestLevel;
             interest.sizex=area_x_random;
             interest.sizey=area_y_random;

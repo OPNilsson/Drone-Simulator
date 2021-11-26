@@ -39,6 +39,7 @@ public class UINavigator : MonoBehaviour
     public GameObject DBT;
     public GameObject worldSettings;
     public GameObject droneBase;
+    private int dronebat=0, dronemotor=0;
 
     public void dB()
     {
@@ -123,30 +124,30 @@ public class UINavigator : MonoBehaviour
             //idealy set input for stat calculation. Currently set output directly
             case 0:
                 s=10;
-                a=1;
+                a=8;
                 break;
             case 1:
                 s=15;
-                a=2;
+                a=12;
                 break;
             default:
                 s=20;
-                a=3;
+                a=16;
                 break;
         }
         switch(DMbat.GetComponent<TMP_Dropdown>().value){
             //idealy set input for stat calculation. Currently set output directly
             case 0:
                 c=10;
-                t=1000;
+                t=900;
                 break;
             case 1:
                 c=11;
-                t=1500;
+                t=1400;
                 break;
             default:
                 c=12;
-                t=2000;
+                t=1800;
                 break;
         }
         //outputs "calculated", now set them
@@ -158,34 +159,34 @@ public class UINavigator : MonoBehaviour
     public void updateDB(){
         float s=0,a=0,c=0,t=0;//should be made public and declared outside for external acces
         //OR, could set their values from here...
-        switch(DBmotor.GetComponent<TMP_Dropdown>().value){
+        switch(dronemotor){
             //idealy set input for stat calculation. Currently set output directly
             case 0:
                 s=10;
-                a=1;
+                a=8;
                 break;
             case 1:
                 s=15;
-                a=2;
+                a=12;
                 break;
             default:
                 s=20;
-                a=3;
+                a=16;
                 break;
         }
-        switch(DBbat.GetComponent<TMP_Dropdown>().value){
+        switch(dronebat){
             //idealy set input for stat calculation. Currently set output directly
             case 0:
                 c=10;
-                t=1000;
+                t=900;
                 break;
             case 1:
                 c=11;
-                t=1500;
+                t=1400;
                 break;
             default:
                 c=12;
-                t=2000;
+                t=1800;
                 break;
         }
         //outputs "calculated", now set them
@@ -197,5 +198,11 @@ public class UINavigator : MonoBehaviour
         DroneController dc = droneBase.GetComponent<DroneController>();
         dc.drone_speed=s;
         dc.drone_battery=t;
+    }
+    public void DBBat(int i){
+        dronebat=i;
+    }
+    public void DBMot(int i){
+        dronemotor=i;
     }
 }
