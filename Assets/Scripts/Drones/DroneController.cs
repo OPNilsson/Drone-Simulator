@@ -408,6 +408,7 @@ public class DroneController : MonoBehaviour
 
     public void startSim()
     {
+        int peopleSpawned=0;
         alternating= (wd!=0);
         wind.x=wsx1;wind.y=wsy1;
         currentStartTime = DateTime.Now;
@@ -461,7 +462,7 @@ public class DroneController : MonoBehaviour
             i.GetComponent<Drone>().destroy();
         }
         GameObject interestObject;
-        int peopleSpawned=0;
+        
         for (int i = 0; i < num_interest; i++)
         {
             float x_random = UnityEngine.Random.Range(0, map_sizex);
@@ -492,8 +493,8 @@ public class DroneController : MonoBehaviour
             // Spawn People
             GameObject peopleObject;
             int peopleToSpawn=UnityEngine.Random.Range(num_people/(2*num_interest),Mathf.Min((2*num_people/num_interest),num_people-peopleSpawned));
-            peopleSpawned+=peopleToSpawn;
             if(i==num_interest-1){peopleToSpawn=num_people-peopleSpawned;}
+            peopleSpawned+=peopleToSpawn;
             for (int p = 0; p < peopleToSpawn; p++)
             {
                 float xrand=UnityEngine.Random.Range(0,area_x_random)+UnityEngine.Random.Range(0,area_x_random)-area_x_random;
