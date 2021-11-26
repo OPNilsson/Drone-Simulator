@@ -6,7 +6,7 @@ public class Interest : MonoBehaviour
 {
     public SpriteRenderer sprite;
     private const float InterestDropRate = 0.05f;
-    private const int InterestTimer = 1; // Time in seconds untill the interest falls again
+    private const float InterestTimer = 1; // Time in seconds untill the interest falls again
 
     private List<Drone> drones; // The drones currently inside the area
     public float intrestLevel = 1;
