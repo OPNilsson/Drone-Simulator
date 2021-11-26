@@ -112,7 +112,12 @@ public class DroneController : MonoBehaviour
             {
                 // If not then the drone will go back home
                 drone.ChangeTarget(gameObject.transform);
-            }
+				if (runCSVO)
+				{
+					runCSVO = false;
+					toCSVConverter.ListToCSV(peopleFound);
+				}
+			}
         }
         return poI;
     }
@@ -231,6 +236,8 @@ public class DroneController : MonoBehaviour
             try
             {
                 int i=interests.IndexOf(interest);
+				if(i == -1)
+					return;
                 interests.Remove(interest);
                 dronesOnPoI.RemoveAt(i);
             }
