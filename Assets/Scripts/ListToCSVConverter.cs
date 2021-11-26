@@ -7,8 +7,9 @@ using System;
 
 public class ListToCSVConverter : MonoBehaviour
 {
-	private string fileName = "results2.csv";
-    private string path = "results";
+	private string fileName = $@"results{DateTime.Now.ToString("MMddHHmmss")}.csv";
+
+	private string path = "results";
     //private string path02 = Application.dataPath + "/Data/" + "Saved_HumanData.csv";
 
     public ListToCSVConverter () {}
@@ -20,7 +21,7 @@ public class ListToCSVConverter : MonoBehaviour
 		if (!Directory.Exists("somedir"))
 			Directory.CreateDirectory(path);
 
-		StreamWriter write = new StreamWriter(path + "\\" + fileName);        
+		StreamWriter write = File.AppendText(path + "\\" + fileName);        
 
         write.WriteLine("x-Cordinates, y-Cordinates, time left, found_time");
 
