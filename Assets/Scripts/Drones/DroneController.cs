@@ -164,32 +164,7 @@ public class DroneController : MonoBehaviour
                 person.YCords = trns.position.y;
                 removePerson = true;
                 personToRemove = person;
-                float deltax = trns.position.x-poi.position.x;
-                float deltay = trns.position.y-poi.position.y;
-                float dx=deltax/interest.sizex;
-                float dy=deltay/interest.sizey;
-                float dist2 =(dx*dx+dy*dy);
-                if(dist2 >0.25f && dist2<0.5f){ //Outside PoI
-                    // Instatiate new PoI
-                    GameObject interestObject = Instantiate(prefab_interest, new Vector3(trns.position.x+deltax, trns.position.y+deltay, prefab_interest.transform.position.z), Quaternion.identity);
-
-                    Vector3 scale = interestObject.transform.localScale;
-
-                    scale.x *= interest.sizex;
-                    scale.y *= interest.sizey;
-
-                    interestObject.transform.localScale = scale;
-
-                    Interest interestSpawned=interestObject.GetComponent<Interest>();
-                    interests.Add(interestSpawned);
-                    interestSpawned.time_scale=time_scale;
-                    interestSpawned.sizex=interest.sizex;
-                    interestSpawned.sizey=interest.sizey;
-                    interestSpawned.intrestLevel=interest.sizex*interest.sizey/5000f;
-                    interestSpawned.peekInterest=interest.intrestLevel;
-
-                    dronesOnPoI.Add(0);
-                }else if (dist2 >0.5f){//randomly found, place PoI on person
+                if(poi.gameObject==gameObject){
                     GameObject interestObject = Instantiate(prefab_interest, new Vector3(trns.position.x, trns.position.y, prefab_interest.transform.position.z), Quaternion.identity);
 
                     Vector3 scale = interestObject.transform.localScale;
@@ -200,12 +175,56 @@ public class DroneController : MonoBehaviour
                     Interest interestSpawned=interestObject.GetComponent<Interest>();
                     interests.Add(interestSpawned);
                     interestSpawned.time_scale=time_scale;
-                    interestSpawned.sizex=interest.sizex;
-                    interestSpawned.sizey=interest.sizey;
+                    interestSpawned.sizex=scale.x;
+                    interestSpawned.sizey=scale.y;
                     interestSpawned.intrestLevel=map_sizex*map_sizey/(num_interest*num_interest*5000f);
-                    interestSpawned.peekInterest=interest.intrestLevel;
+                    interestSpawned.peekInterest=interestSpawned.intrestLevel;
                     dronesOnPoI.Add(0);
-                }                
+                }else{
+                    float deltax = trns.position.x-poi.position.x;
+                    float deltay = trns.position.y-poi.position.y;
+                    float dx=deltax/interest.sizex;
+                    float dy=deltay/interest.sizey;
+                    float dist2 =(dx*dx+dy*dy);
+                    if(dist2 >0.25f && dist2<0.5f){ //Outside PoI
+                        // Instatiate new PoI
+                        GameObject interestObject = Instantiate(prefab_interest, new Vector3(trns.position.x+deltax, trns.position.y+deltay, prefab_interest.transform.position.z), Quaternion.identity);
+
+                        Vector3 scale = interestObject.transform.localScale;
+
+                        scale.x *= interest.sizex;
+                        scale.y *= interest.sizey;
+
+                        interestObject.transform.localScale = scale;
+
+                        Interest interestSpawned=interestObject.GetComponent<Interest>();
+                        interests.Add(interestSpawned);
+                        interestSpawned.time_scale=time_scale;
+                        interestSpawned.sizex=interest.sizex;
+                        interestSpawned.sizey=interest.sizey;
+                        interestSpawned.intrestLevel=interest.sizex*interest.sizey/5000f;
+                        interestSpawned.peekInterest=interest.intrestLevel;
+
+                        dronesOnPoI.Add(0);
+                    }else if (dist2 >0.5f){//randomly found, place PoI on person
+                        GameObject interestObject = Instantiate(prefab_interest, new Vector3(trns.position.x, trns.position.y, prefab_interest.transform.position.z), Quaternion.identity);
+
+                        Vector3 scale = interestObject.transform.localScale;
+
+                        scale.x *= map_sizex/(num_interest);
+                        scale.y *= map_sizey/(num_interest);
+                        interestObject.transform.localScale = scale;
+                        Interest interestSpawned=interestObject.GetComponent<Interest>();
+                        interests.Add(interestSpawned);
+                        interestSpawned.time_scale=time_scale;
+                        interestSpawned.sizex=scale.x;
+                        interestSpawned.sizey=scale.y;
+                        interestSpawned.intrestLevel=map_sizex*map_sizey/(num_interest*num_interest*5000f);
+                        interestSpawned.peekInterest=interestSpawned.intrestLevel;
+                        dronesOnPoI.Add(0);
+                    }           
+                }
+                     
 
                 person.Spotted();
 
@@ -402,11 +421,62 @@ public class DroneController : MonoBehaviour
        // }
     }
 
-    private void Start()
-    {
-        startSim();
-    }
+    private void Start(){
+        runCSVO=true;
+        int peopleSpawned=0;
+        alternating= (wd!=0);
+        wind.x=wsx1;wind.y=wsy1;
+        currentStartTime = DateTime.Now;
+		UnityEngine.Random.InitState(seed);
+        if(peopleFound==null){
+            peopleFound = new List<People>();
+        }else{
+            foreach(People i in peopleFound){
+                i.destroy();
+            }
+            peopleFound.Clear();
+        }
+        
+        toCSVConverter = new ListToCSVConverter();
+        // Gets the postion of the controller
+        x = this.transform.position.x;
+        y = this.transform.position.y;
 
+        // Spawn Interests and People
+        if(interests==null){
+            interests = new List<Interest>();
+        }else{
+            foreach(Interest i in interests){
+                i.destroy();
+            }
+            interests.Clear();
+        }
+        if(people==null){
+            people = new List<People>();
+        }else{
+            foreach(People i in people){
+                i.destroy();
+            }
+            people.Clear();
+        }
+        if(dronesOnPoI==null){
+            dronesOnPoI = new List<int>();
+        }else{
+            dronesOnPoI.Clear();
+        }
+        if(drones==null){
+            drones = new List<Drone>();
+        }else{
+            foreach(Drone i in drones){
+                i.destroy();
+            }
+            drones.Clear();
+        }
+        GameObject[] rebelDrones = GameObject.FindGameObjectsWithTag("Drone");
+        foreach(GameObject i in rebelDrones){
+            i.GetComponent<Drone>().destroy();
+        }
+    }
     public void startSim()
     {
         runCSVO=true;

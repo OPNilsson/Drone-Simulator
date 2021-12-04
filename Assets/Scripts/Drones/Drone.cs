@@ -233,6 +233,9 @@ public class Drone : MonoBehaviour
         if (seeker.IsDone() && target != null)
         {
             if(patroling){
+                if(subtarget==null){
+                    control.ReachedTarget(this);
+                }
                 seeker.StartPath(body.position, subtarget.transform.position, OnPathComplete);
             }else{
                 seeker.StartPath(body.position, target.position, OnPathComplete);

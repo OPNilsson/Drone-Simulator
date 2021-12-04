@@ -28,7 +28,7 @@ public class ListToCSVConverter : MonoBehaviour
         foreach (People people in humanList)
         {
             timeDifferent = (people.TimeWhenFound - DroneController.currentStartTime);
-            timeDifferent= TimeSpan.FromSeconds(timeDifferent.Seconds/people.time_scale);
+            timeDifferent= TimeSpan.FromSeconds(timeDifferent.TotalSeconds*people.time_scale);
             write.WriteLine(people.XCords + "," + people.YCords + "," + people.TimeToFind + "," + timeDifferent);
         }
         write.Flush();
