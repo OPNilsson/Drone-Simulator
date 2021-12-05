@@ -12,7 +12,7 @@ The program features two drone types, a plane (UAV), a quadcopter (Drone), simul
 
 ## Drones
 
-The base of the program is the simulation of these drones, all drone types are built upon the following foundations (Described in more detail in the Quadcopters & UAVs subsection):
+The base of the program is the simulation of these drones, all drone types are built upon the following foundations (Described in more detail in their subsection):
 
 - Movement
     - Speed
