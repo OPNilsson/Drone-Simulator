@@ -205,4 +205,7 @@ public class UINavigator : MonoBehaviour
     public void DBMot(int i){
         dronemotor=i;
     }
+    public void caput(){
+        Application.Quit();
+    }
 }
