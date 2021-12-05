@@ -106,6 +106,13 @@ The dropdown settings affect the following:
 - The drone component selection sub-menu is heavily simplified, with only motor and battery selection, both of which have 3 classes of component, (A, B, C) each progressively better. For future work, more concrete components with corresponding calculations of drone statistics would be preferred, but this was more complex than anticipated, and not essential to the simulation.
 Pressing (Update Drone) updates the statistics in the main menu, though it's not necessary to press it, as starting the simulation triggers it regardless.
 
+
+## Mini-Map
+
+The simulator features a minimap in the top left corner of the screen which outlines in white where in the world the camara is along with a zoomed out version of the normal map.
+
+![Minimap](./ReadMePictures/mini.gif)
+
 # Running the Simulation
 
 **In order to  test other aspect of the simulation Unity Editor is prefered**
