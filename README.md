@@ -2,7 +2,7 @@
 
 **This ReadME file was designed for Github and it is best read on the repo: https://github.com/OPNilsson/Drone-Simulator**
 
-**To get instruction on how to run the code scroll down to [Running the Simulation](#Running-the-Simmulation)**
+**To get instruction on how to run the code scroll down to [Running the Simulation](#running-the-simmulation)**
 
 A program designed for [Model-Based Systems Engineering 02223](https://kurser.dtu.dk/course/02223) at DTU, in where the goal of the course was to implement a program that will present a solution to a client that would ease a task that would be hard to find without the simulator. For this task our group (Group 25), decide to create a simulation of a drone rescue in where people are stranded around in an emergency scenario.
 
@@ -41,7 +41,7 @@ In order to move Unity force is added to the rigidbody of the drone multiplied b
 
 #### Refuling
 
-A drone has a maximum flight distance as simulated by the usage of the fuel bar on the drones. When movement is conduceted and the drone consumes fuel it will check if it has a minimum fuel capacity required to keep flying, if it doesn't it will attempt to fly back to the [Drone Base](#Drone-Base). The further that the drone flies away from the drone base the larger the minimum fuel capacity required to keep flying is in an attempt to simulate the drones to have a sense  that they need to have enough fuel to fly back to base.
+A drone has a maximum flight distance as simulated by the usage of the fuel bar on the drones. When movement is conduceted and the drone consumes fuel it will check if it has a minimum fuel capacity required to keep flying, if it doesn't it will attempt to fly back to the [Drone Base](#drone-base). The further that the drone flies away from the drone base the larger the minimum fuel capacity required to keep flying is in an attempt to simulate the drones to have a sense  that they need to have enough fuel to fly back to base.
 
 #### FOV
 
@@ -60,7 +60,7 @@ This grey area is around the drone is the representation of the drone's FOV an s
 
 ### Drone Base
 
-The drone base is a crucial component to the drones as it simiulates the rescu operator giving new intuition to the drones on where to fly in search of survivors. The Drone base controls the reassignment of the drones target, the generation of new [Points of Interest](#Points-of-Interest), and the refuling of the drones.  
+The drone base is a crucial component to the drones as it simiulates the rescu operator giving new intuition to the drones on where to fly in search of survivors. The Drone base controls the reassignment of the drones target, the generation of new [Points of Interest](#points-of-interest), and the refuling of the drones.  
 
 ![Base Demo](./ReadMePictures/base.gif)
 
