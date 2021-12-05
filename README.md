@@ -2,7 +2,7 @@
 
 **This ReadME file was designed for Github and it is best read on the repo: https://github.com/OPNilsson/Drone-Simulator**
 
-**To get instruction on how to run the code scroll down to [Running the Simulation](#running-the-simmulation)**
+**To get instruction on how to run the code scroll down to [Running the Simulation](#running-the-simulation)**
 
 A program designed for [Model-Based Systems Engineering 02223](https://kurser.dtu.dk/course/02223) at DTU, in where the goal of the course was to implement a program that will present a solution to a client that would ease a task that would be hard to find without the simulator. For this task our group (Group 25), decide to create a simulation of a drone rescue in where people are stranded around in an emergency scenario.
 
